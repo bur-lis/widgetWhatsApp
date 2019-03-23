@@ -1,0 +1,406 @@
+.style-select.prostowapp {
+    margin-bottom: 10px;
+    width: 150px;
+}
+
+.option-style.prostowapp {
+    background-color: #FFCC33;
+    font-size: inherit;
+    color: #000;
+    font-weight: bold;
+}
+
+.ac-form-button.prostowapp {
+    text-align: center;
+    width: 100%;
+    margin: 10px 0px;
+    padding: 10px 0px;
+}
+
+.ac-form-button.prostowapp:hover {
+    cursor: pointer;
+}
+
+div[class*="server-"].prostowapp {
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    width: 100%;
+    text-align: center;
+
+    display: flex;
+    flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    align-items: center;
+    -webkit-align-items: center;
+}
+
+.btn-center.prostowapp {
+    width: 100%;
+    text-align: -webkit-center;
+    text-align: -moz-center;
+    text-align: center;
+}
+
+span.big-number.prostowapp {
+    font-size: 45px;
+}
+
+.not-pay-alert.prostowapp {
+    background-color: #ffc6a8;
+    border: 1px solid #cc7766;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.not-pay-alert.prostowapp div {
+    color: #6f0300;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.payment.prostowapp {
+    background-color: #ff6;
+    border: 1px solid #fc3;
+    width: 100%;
+    text-align: center;
+    text-align: -moz-center;
+    text-align: -webkit-center;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+.payment.prostowapp div {
+    color: #000;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.server-success.prostowapp {
+    background-color: #c1ffc1;
+    border: 1px solid #063;
+}
+.server-success.prostowapp div {
+    color: #063;
+    font-weight: bold;
+    margin: 20px;
+    width:100%;
+}
+
+.server-error.prostowapp {
+    background-color: #f63;
+    border: 1px solid #900;
+}
+
+.server-error.prostowapp div {
+    color: #900;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.server-no-contacts.prostowapp {
+    background-color: #edf8d8;
+    border: 1px solid #330;
+}
+
+.server-no-contacts.prostowapp div {
+    color: #330;
+    font-weight: bold;
+    margin: 20px;
+}
+
+#wa_message.prostowapp {
+    background-color: #edf8d8;
+    color: #330;
+    width: calc(100% - 10px);
+    height: calc(250px - 10px);
+    resize: none;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    padding: 10px 0px 0px 10px
+}
+
+.span-text.prostowapp {
+    color: #333;
+    margin-left: 10px;
+    text-decoration: none;
+    font: 400 14px Arial;
+}
+
+.span-text.prostowapp:hover {
+    color: #000;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.span-text-2.prostowapp {
+    color: #555;
+}
+
+.back.prostowapp {
+    background-image: linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    background-image: -webkit-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    background-image: -moz-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    background-image: -o-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    background-image: -ms-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    color: #000;
+    font-weight: bold;
+    border: 0px solid #AAA;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.back.prostowapp:hover {
+    cursor: pointer;
+}
+
+.back2.prostowapp {
+    background-image: linear-gradient(#0033CC, #3366FF 40%, #6699FF);
+    background-image: -webkit-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
+    background-image: -moz-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
+    background-image: -o-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
+    background-image: -ms-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
+    color: #fff;
+    font-weight: bold;
+    border: 0px solid #AAA;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.back2.prostowapp:hover {
+    cursor: pointer;
+}
+
+.add-file-btn.prostowapp {
+    cursor: pointer;
+}
+
+.t-menu-style-head.prostowapp {
+    background-color: #EDF8D8;
+    border-radius: 4px 4px 0px 0px;
+    -webkit-border-radius: 4px 4px 0px 0px;
+    -moz-border-radius: 4px 4px 0px 0px;
+    border: 1px solid #330;
+    display: flex;
+    flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    align-items: center;
+    -webkit-align-items: center;
+    height: 55px;
+
+}
+
+.t-menu-style-body.prostowapp {
+    background-color: #fff;
+    color: #000;
+    border-radius: 0px 0px 4px 4px;
+    -webkit-border-radius: 0px 0px 4px 4px;
+    -moz-border-radius: 0px 0px 4px 4px;
+    border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #330;
+    font-size: 16px;
+    display: none;
+    padding: 10px;
+}
+
+#t-container.prostowapp {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    display: flex;
+    min-width: 890px;
+}
+
+#t-list.prostowapp {
+    width: 50%;
+    min-width: 500px;
+    margin-right: 20px;
+}
+
+#t-message.prostowapp {
+    width: 50%;
+    min-width: 370px;
+    margin-left: 20px;
+}
+
+#prostowapp-main-modal {
+    min-width: 970px;
+    max-width: 1100px;
+    width: 80%;
+}
+
+#prostowapp-editor-modal {
+    min-width: 500px;
+    max-width: 700px;
+    width: 100%;
+}
+
+#prostowapp-add-modal {
+    width: 100%;
+    min-width: 500px;
+    max-width: 700px;
+}
+
+.tool.prostowapp {
+    height: 15px;
+    margin-left: 10px;
+}
+
+.clip.prostowapp {
+    height: 30px;
+    margin: 5px 0px 0px 15px;
+}
+
+.tool.prostowapp:hover {
+    cursor: pointer;
+}
+
+.label.prostowapp {
+    display: inline-block;
+    width: 110px;
+}
+
+input#name.prostowapp {
+    background-color: #edf8d8;
+    border: 1px solid #330;
+    color: #330;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    width: 100%;
+}
+
+textarea#text.prostowapp {
+    background-color: #edf8d8;
+    border: 1px solid #330;
+    color: #330;
+    height: 250px;
+    width: 100%;
+    resize: none;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+#edit-submit.prostowapp, #add-submit.prostowapp, #add-block.prostowapp, .add-position.prostowapp, #del-yes.prostowapp, #del-no.prostowapp, .back.prostowapp, .back2.prostowapp  {
+   padding: 10px;
+}
+
+img.queue.prostowapp {
+   height: 7px;
+   margin-left: 20px;
+}
+
+.div-body.prostowapp {
+    margin: 10px;
+}
+
+.checkbox-position.prostowapp {
+    background: #edf8d8;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    padding: 10px 0px;
+}
+
+.chbox.prostowapp {
+    margin-left: 15px;
+    margin-right: 10px;
+}
+
+#modal-template.prostowapp {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0px;
+}
+
+#del-yes.prostowapp {
+    margin-right: 20px;
+}
+
+#ps-text.prostowapp {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    background-color: #f9f9f9;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.client-fields.prostowapp {
+    border-bottom: 1px solid #555;
+}
+
+#success_request.prostowapp {
+    display: none;
+}
+
+#warning.prostowapp {
+    border: 1px solid #900;
+    border-radius: 50%;
+    background: #fff;
+    color: #900;
+    font-weight: bold;
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+    display: inline-block;
+    text-align: center;
+}
+
+#warning-window.prostowapp {
+    border: 1px solid #900;
+    border-radius: 5px;
+    background: #fff;
+    color: #900;
+    width: 650px;
+    padding: 10px;
+    text-align: justify;
+    display: none;
+    z-index: 100000000;
+    position: absolute;
+    margin-left: -65vh;
+}
+
+#free-message-container.prostowapp {
+    margin-top: 20px;
+}
+
+#free-message-container.prostowapp [type=checkbox] {
+    transform:scale(1.5);
+    cursor:pointer;
+}
+
+#widget-settings.prostowapp {
+    margin-left: 20px;
+}
+
+#black-number-input.prostowapp {
+    background: #EDF8D8;
+    border-color: #330;
+    border-radius: 5px;
+    margin-right: 15px;
+    height: 40px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.delete-black-number.prostowapp {
+    font-weight: bold;
+    margin-right: 15px;
+    cursor: pointer;
+    color: #000;
+}
+
+.delete-black-number.prostowapp:hover {
+    color: #FFCC09;
+}

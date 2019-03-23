@@ -1,0 +1,34 @@
+{
+    "widget":{
+            "name": "widget.name",
+            "description": "widget.description",
+            "short_description": "widget.short_description",
+            "code": "test_lis",
+            "secret_key": "a896b20fddfa697734ebf2b3709b850041e9985fa14f1f52e44e7e70ae7e8f80",
+            "version": "1.0.4",
+            "interface_version": 2,
+            "init_once": false,
+            "locale":[
+                    "ru"
+                    ],
+            "installation": true
+            },
+    "locations":[
+            "lcard-1",
+            "ccard-1",
+            "clist-1",
+            "settings"
+            ],
+    "settings":{
+                "adminemailprostowapp":{
+                        "name": "settings.adminemailprostowapp",
+                        "type": "text",
+                        "required": true
+                        },
+                "apikeyprostowapp":{
+                        "name": "settings.apikeyprostowapp",
+                        "type": "text",
+                        "required": true
+                      }
+            }
+}
