@@ -1,12 +1,17 @@
 {
     "widget":{
-        "name":"Мой виджет",
-        "short_description":"Короткое описание виджета",
-        "description":"Полное описание виджета"
-    },
+        "name":"Виджет WhatsApp",
+        "short_description":"Виджет для отправки сообщений в WhatsApp",
+        "description":"<span style=\"font-weight:bold;\">Описание:</span><br>Данный виджет предоставляет возможность вашим клиентам в What’s App отправлять сообщения прямо из карточки сделки.<br>Для этого вам необходимо всего лишь выбрать нужное сообщение из многофункционального шаблона, который вы составите заранее, и номер для отправки.<br></br>"
+     },
     "settings":{
-        "login":"Логин",
-        "api_key":"ключ API",
-        "account":"Аккаунт"
+        "adminemailprostowapp":"E-mail аккаунта админа",
+        "apikeyprostowapp":"API ключ аккаунта админа"
+    },
+    "userLang": {
+        "firstWidgetText": "Кликните на кнопку, чтобы переслать данные на сторонний сервер:",
+        "textIntoTheButton": "Отправить сообщение",
+        "responseMessage" : "Ответ сервера :",
+        "responseError" : "Ошибка"
     }
 }
