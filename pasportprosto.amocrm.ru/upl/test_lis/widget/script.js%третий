@@ -6,7 +6,7 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
         var user_subdomain = AMOCRM.widgets.system.subdomain;
         var files;
         var moneybag = '41001137689349';
-        var contactsHtml = '<div class="prostowapp contacts">Возникли вопросы? Звоните или пишите в What\'sApp: +7 (900) 654-63-01<br>Не хотите звонить? Пишите нам на почту: rivza.kat@prosto.group<br><br>* What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества, количества контактов и частоты отправки. В случае бана системой What\'sApp ответственности не несем.</div>';
+        var contactsHtml = '<div class="prostowapp contacts">Пишите нам на почту: rivza.kat@prosto.group<br>Звоните или пишите в What\'sApp: +7 (900) 654-63-01<br>';
         var contactsEmail = '<div class="prostowapp contacts">Напишите нам на почту: rivza.kat@prosto.group\n</div>';
         var blockInfo = {};
 
@@ -1005,7 +1005,13 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
 
 			bind_actions: function(){
 				return true;
-			},
+            },
+            
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 			settings: function(){
                 w_code = self.get_settings().widget_code;
@@ -1018,12 +1024,8 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
                 var widgetState = $('.modal-body').find(':checkbox');
                 var stateDiv = document.querySelector('.widget-state');
 
-                
-
                         var formRequest = 
-                            `<br>Оставьте Ваше имя и номер телефона, чтобы наш оператор связался в вами.
-                            <br><br>
-                            Как к Вам обращаться *:
+                            `Как к Вам обращаться *:
                             <input type="text" size="30" id="client_name" class="client-fields prostowapp">
                             <br><br>
                             Ваш телефон *:
@@ -1034,39 +1036,18 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
                             <br><br>
                             <div class="btn-center prostowapp">
                             <input type="button" class="back prostowapp" id="send-request" value="ОСТАВИТЬ ЗАЯВКУ">
-                            </div><br><br>`+ contactsEmail;
-    
-                            var formPayment =
-                            '<br>Продлите виджет прямо сейчас!<br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">' +
-                                '<input type="hidden" name="receiver" value="'+moneybag+'">' +
-                                '<input type="hidden" name="label" value="widgetWA'+ user_subdomain +'">' +
-                                '<input type="hidden" name="quickpay-form" value="donate">' +
-                                '<input type="hidden" name="targets" value="Оплата виджета What\'sApp">' +
-                                '<div class="payment prostowapp"><br><input type="radio" name="sum" value="2500" data-type="number"><div>Продлить на 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div>' +
-                                '<div class="payment prostowapp"><br><input type="radio" name="sum" value="7200" data-type="number"><div>Продлить на 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div>' +
-                                '<div class="payment prostowapp"><br><input type="radio" name="sum" value="13800" data-type="number"><div>Продлить на полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div>' +
-                                '<div class="payment prostowapp"><br><input type="radio" name="sum" value="26000" data-type="number"><div>Продлить на год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br>'+
-                                '<input type="hidden" name="comment" value="'+ user_subdomain +'">' +
-                                '<input type="hidden" name="need-fio" value="false">' +
-                                '<input type="hidden" name="need-email" value="false">' +
-                                '<input type="hidden" name="need-phone" value="false">' +
-                                '<input type="hidden" name="need-address" value="false">' +
-                                '<br>Выберете способ оплаты:<br>' +
-                                '<input type="radio" name="paymentType" value="PC"> Яндекс.Деньги<br>' +
-                                '<input type="radio" name="paymentType" value="AC"> Банковская карта<br><br>' +
-                                '<div class="btn-center prostowapp"><input type="submit" class="back prostowapp" value="ОПЛАТИТЬ"></div><br>' +
-                            '</form><br>'+contactsHtml;
+                            </div><br><br>`;
     
                         var formPaymentNew =
-                            '<br>Купите виджет прямо сейчас!<br><br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">' +
+                            '<br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">' +
                             '<input type="hidden" name="receiver" value="'+moneybag+'">' +
                             '<input type="hidden" name="label" value="widgetWA'+ user_subdomain +'">' +
                             '<input type="hidden" name="quickpay-form" value="donate">' +
                             '<input type="hidden" name="targets" value="Оплата виджета What\'sApp">' +
-                            '<div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2500" data-type="number"><div>Купить на 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div>' +
-                            '<div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>Купить на 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div>' +
-                            '<div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>Купить на полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div>' +
-                            '<div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="26000" data-type="number"><div>Продлить на год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br>'+
+                            '<label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2500" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div></label>' +
+                            '<label for="treemonthInput"><div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>На 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div></label>' +
+                            '<label for="sixmonthInput"><div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>На полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div></label>' +
+                            '<label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>'+
                             '<input type="hidden" name="comment" value="">' +
                             '<input type="hidden" name="need-fio" value="false">' +
                             '<input type="hidden" name="need-email" value="false">' +
@@ -1079,15 +1060,7 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
                             '</form><br>'+contactsHtml;
 
                             
-                            // var block2input = document.querySelector('#treemonth');
-                            //     block2input.addEventListener('click', infoPay);
                             
-                            // var block3input = document.querySelector('#sixmonth');
-                            //     block3input.addEventListener('click', infoPay);
-
-                            // var block4input = document.querySelector('#oneyear');
-                            //     block4input.addEventListener('click', infoPay);
-    
                         var formData = {
                             user_subdomain: user_subdomain,
                             tool: 'client'
@@ -1163,173 +1136,121 @@ define(['jquery','lib/components/base/modal'], function($, Modal){
                                                        <br><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lkBIHZKUUP0?rel=0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>
                                                        <br><br>Мы предоставляем вам 1 день теста, чтобы вы могли попробовать наш продукт в своем бизнесе.<br>
                                                        <br><span style=\"font-weight:bold;\">FAQ по виджету:</span> https://prosto.group/faq/<br><br>
-                                                       <span style=\"font-weight:bold;\">Оставьте заявку и наш разработчик ответит на все возникшие у вас вопросы!</span>
-                                                       <br><br></div>`+contactsHtml;
+                                                       <span style=\"font-weight:bold;\"> Оставьте заявку и наш разработчик ответит на все возникшие у вас вопросы!</span>
+                                                       <br><br></div>`+ formRequest +contactsHtml + `<br>
+                                                       * What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества,
+                                                        количества контактов и частоты отправки. В случае бана системой What\'sApp 
+                                                        ответственности не несем.</div>`;
+                                                        
                                     infoTabBlock.innerHTML = description;
+
+                                    var buttonSend = document.querySelector('#send-request.prostowapp');
+                                    buttonSend.addEventListener('click', sendRequst );
+
+                                    function sendRequst()  {
+                                        //$('#accept.prostowapp:checked').length==1
+                                        if(true) {
+                                            var c_name = $('#client_name.prostowapp').val();
+                                            var c_num = $('#client_number.prostowapp').val();
+                                            let adminEmail = $('[name=adminemailprostowapp]').val();
+                                            let adminAPI = $('[name=apikeyprostowapp]').val();
+     
+                                            var formData = {
+                                                client_name: c_name,
+                                                client_number: c_num,
+                                                admin_email: adminEmail,
+                                                admin_api: adminAPI,
+                                                client_subdomain: user_subdomain,
+                                                tool: 'request'
+                                            };
+     
+                                            self.crm_post(
+                                                server_url,
+                                                formData,
+                                                function(req_num){
+                                                    if(req_num) {
+                                                        var req_succ = '<br><div class="server-success prostowapp"><div>Успешная отправка. Номер заявки: '+
+                                                            req_num+'.<br>' +
+                                                            'С Вами свяжется оператор.</div></div>' +
+                                                            formPaymentNew;
+
+                                                       infoTabBlock.innerHTML = req_succ;
+                                                    }
+                                                    else {
+                                                        var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Некорректные имя или номер телефона.</div></div><br>';
+                                                        $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
+                                                        $('br').remove();
+                                                        $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
+                                                    }
+                                                },
+                                                'json',
+                                                function(){}
+                                            );
+                                        }
+                                        else {
+                                            var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
+                                            $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
+                                            $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
+                                        }
+                                    }
+
+                                    
                                 }
     
                                 function infoPay(){
-                                    if(finalDate>currentDate) {
-                                        var localeDate = new Date(data.date).toLocaleString("ru",{
-                                                                                                 day: 'numeric',
-                                                                                                 month: 'long',
-                                                                                                 year:'numeric'
-                                                                                                  });
-                                        var findate =
-                                            `<br><br>
-                                             <input type="checkbox" id="accept" class="prostowapp">
-                                             Согласен на обработку моих персональных данных.
-                                             <br><br><br>
-                                             <div class="server-success prostowapp"><div>
-                                             Срок окончания оплаты: ${localeDate}
-                                             </div></div>`;
+
+                                    var localeDate = new Date(data.date).toLocaleString("ru",{
+                                        day: 'numeric',
+                                        month: 'long',
+                                        year:'numeric'
+                                         });
                                          
-                                             infoTabBlock.innerHTML= findate+formPayment;
-
-                                        var block1input = document.querySelector('.payment.prostowapp');
-                                        block1input.addEventListener('click', function(){$('#onemonthInput').checked = true;});
-
-                                       // $('#info_container.prostowapp').html(findate+formPayment);
-                                    }
-                                    else {
-                                        var content;
-                                        if(data.subdomain) {
-                                            content = (userState==="start") ? formPaymentNew : formPayment;
-                                        }
-                                        else {
-                                            content = formRequest;
-                                        }
-         
-                                       // $('#info_container.prostowapp').html(content);
-                                       infoTabBlock.innerHTML= content;
-         
-                                        $('#send-request.prostowapp').on('click', function () {
-                                            if($('#accept.prostowapp:checked').length==1) {
-                                                var c_name = $('#client_name.prostowapp').val();
-                                                var c_num = $('#client_number.prostowapp').val();
-                                                let adminEmail = $('[name=adminemailprostowapp]').val();
-                                                let adminAPI = $('[name=apikeyprostowapp]').val();
-         
-                                                var formData = {
-                                                    client_name: c_name,
-                                                    client_number: c_num,
-                                                    admin_email: adminEmail,
-                                                    admin_api: adminAPI,
-                                                    client_subdomain: user_subdomain,
-                                                    tool: 'request'
-                                                };
-         
-                                                self.crm_post(
-                                                    server_url,
-                                                    formData,
-                                                    function(req_num){
-                                                        if(req_num) {
-                                                            var req_succ = '<br><div class="server-success prostowapp"><div>Успешная отправка. Номер заявки: '+
-                                                                req_num+'.<br>' +
-                                                                'С Вами свяжется оператор.</div></div>' +
-                                                                formPaymentNew;
-                                                           // $('#info_container.prostowapp').html(req_succ);
-                                                           infoTabBlock.innerHTML = req_succ;
-                                                        }
-                                                        else {
-                                                            var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Некорректные имя или номер телефона.</div></div><br>';
-                                                            $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                                            $('br').remove();
-                                                            $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
-                                                        }
-                                                    },
-                                                    'json',
-                                                    function(){}
-                                                );
-                                            }
-                                            else {
-                                                var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
-                                                $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                                $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
-                                            }
-         
-                                        });
-                                    }
-    
-                                    if(finalDate>currentDate) {
-                                        var localeDate = new Date(data.date).toLocaleString("ru",{
-                                                                                                 day: 'numeric',
-                                                                                                 month: 'long',
-                                                                                                 year:'numeric'
-                                                                                                  });
-                                        var findate =
+                                    var findate =
                                             `<br><br>
                                              <input type="checkbox" id="accept" class="prostowapp">
                                              Согласен на обработку моих персональных данных.
                                              <br><br><br>
                                              <div class="server-success prostowapp"><div>
                                              Срок окончания оплаты: ${localeDate}
-                                             </div></div>`;
-                                         var block1input = document.querySelector('.payment.prostowapp');
-                                        block1input.addEventListener('click', function(){$('#onemonthInput').checked = true;});
+                                             </div></div>
+                                             <br>Продлите виджет прямо сейчас!<br>`;
 
-                                             infoTabBlock.innerHTML= findate+formPayment;
-                                       // $('#info_container.prostowapp').html(findate+formPayment);
+                                    if(finalDate>) {
+                                        
+                                        
+                                         
+                                             infoTabBlock.innerHTML= findate+formPaymentNew;
                                     }
                                     else {
+
+                                        
                                         var content;
-                                        if(data.subdomain) {
+                                        if(false){//data.subdomain) {
+                                            //content = findate+formPayment;
                                             content = (userState==="start") ? formPaymentNew : formPayment;
                                         }
                                         else {
-                                            content = formRequest;
+                                            var findate2 =
+                                            `<br><br>
+                                             <input type="checkbox" id="accept" class="prostowapp">
+                                             Согласен на обработку моих персональных данных.
+                                             <br><br><br>
+                                             <button class="server-success prostowapp"><div>
+                                             Подключить тестовый период
+                                             </div></button>
+                                            <br><br>
+                                            Введите Ваш subdomen *:
+                                            <input type="text" size="30" id="client_subdomen" class="client-fields prostowapp">
+                                            <br>(subdomen - слова в ссылке, после https:\\ и до .amocrm.ru)
+                                            <br><br>
+                                            Введите Ваш API-ключ *:
+                                            <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
+                                            <br><br>
+                                             <br>Купите виджет прямо сейчас!<br>`;
+                                            content = findate2+formPaymentNew;
                                         }
-         
-                                       // $('#info_container.prostowapp').html(content);
                                        infoTabBlock.innerHTML= content;
-         
-                                        $('#send-request.prostowapp').on('click', function () {
-                                            if($('#accept.prostowapp:checked').length==1) {
-                                                var c_name = $('#client_name.prostowapp').val();
-                                                var c_num = $('#client_number.prostowapp').val();
-                                                let adminEmail = $('[name=adminemailprostowapp]').val();
-                                                let adminAPI = $('[name=apikeyprostowapp]').val();
-         
-                                                var formData = {
-                                                    client_name: c_name,
-                                                    client_number: c_num,
-                                                    admin_email: adminEmail,
-                                                    admin_api: adminAPI,
-                                                    client_subdomain: user_subdomain,
-                                                    tool: 'request'
-                                                };
-         
-                                                self.crm_post(
-                                                    server_url,
-                                                    formData,
-                                                    function(req_num){
-                                                        if(req_num) {
-                                                            var req_succ = '<br><div class="server-success prostowapp"><div>Успешная отправка. Номер заявки: '+
-                                                                req_num+'.<br>' +
-                                                                'С Вами свяжется оператор.</div></div>' +
-                                                                formPaymentNew;
-                                                           // $('#info_container.prostowapp').html(req_succ);
-                                                           infoTabBlock.innerHTML = req_succ;
-                                                        }
-                                                        else {
-                                                            var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Некорректные имя или номер телефона.</div></div><br>';
-                                                            $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                                            $('br').remove();
-                                                            $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
-                                                        }
-                                                    },
-                                                    'json',
-                                                    function(){}
-                                                );
-                                            }
-                                            else {
-                                                var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
-                                                $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                                $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
-                                            }
-         
-                                        });
-                                    }  
+                                    }
                                 }    
                             },
                             'json',
