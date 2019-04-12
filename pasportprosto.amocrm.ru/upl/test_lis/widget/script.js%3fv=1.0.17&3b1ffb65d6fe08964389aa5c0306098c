@@ -1023,9 +1023,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 var switcher = $('.modal-body').find('.widget_settings_block__switch');
                 switcher.before('<div id="info_container" class="prostowapp"></div>');
 
-                var widgetState = $('.modal-body').find(':checkbox');
-                var stateDiv = document.querySelector('.widget-state');
-
                 var formRequest =
                     `Как к Вам обращаться *:
                             <input type="text" size="30" id="client_name" class="client-fields prostowapp">
@@ -1040,26 +1037,26 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             <input type="button" class="back prostowapp" id="send-request" value="ОСТАВИТЬ ЗАЯВКУ">
                             </div><br><br>`;
 
-                var formPaymentNew =
-                    '<br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">' +
-                    '<input type="hidden" name="receiver" value="' + moneybag + '">' +
-                    '<input type="hidden" name="label" value="widgetWA' + user_subdomain + '">' +
-                    '<input type="hidden" name="quickpay-form" value="donate">' +
-                    '<input type="hidden" name="targets" value="Оплата виджета What\'sApp">' +
-                    '<label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2500" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div></label>' +
-                    '<label for="treemonthInput"><div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>На 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div></label>' +
-                    '<label for="sixmonthInput"><div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>На полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div></label>' +
-                    '<label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>' +
-                    '<input type="hidden" name="comment" value="">' +
-                    '<input type="hidden" name="need-fio" value="false">' +
-                    '<input type="hidden" name="need-email" value="false">' +
-                    '<input type="hidden" name="need-phone" value="false">' +
-                    '<input type="hidden" name="need-address" value="false">' +
-                    '<br>Выберете способ оплаты:<br>' +
-                    '<input type="radio" name="paymentType" value="PC"> Яндекс.Деньги<br>' +
-                    '<input type="radio" name="paymentType" value="AC"> Банковская карта<br><br>' +
-                    '<div class="btn-center prostowapp"><input type="submit" class="back prostowapp" value="ОПЛАТИТЬ"></div><br>' +
-                    '</form><br>' + contactsHtml;
+                var formPaymentNew = `
+                    <br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">
+                    <input type="hidden" name="receiver" value="' + moneybag + '">
+                    <input type="hidden" name="label" value="widgetWA' + user_subdomain + '">
+                    <input type="hidden" name="quickpay-form" value="donate">
+                    <input type="hidden" name="targets" value="Оплата виджета What\'sApp">
+                    <label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2500" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div></label>
+                    <label for="treemonthInput"><div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>На 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div></label>
+                    <label for="sixmonthInput"><div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>На полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div></label>
+                    <label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>
+                    <input type="hidden" name="comment" value="">
+                    <input type="hidden" name="need-fio" value="false">
+                    <input type="hidden" name="need-email" value="false">
+                    <input type="hidden" name="need-phone" value="false">
+                    <input type="hidden" name="need-address" value="false">
+                    <br>Выберете способ оплаты:<br>
+                    <input type="radio" name="paymentType" value="PC"> Яндекс.Деньги<br>
+                    <input type="radio" name="paymentType" value="AC"> Банковская карта<br><br>
+                    <div class="btn-center prostowapp"><input type="submit" class="back prostowapp" value="ОПЛАТИТЬ"></div><br>
+                    </form><br>` + contactsHtml;
 
 
 
@@ -1150,8 +1147,9 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             buttonSend.addEventListener('click', sendRequst);
 
                             function sendRequst() {
-                                //$('#accept.prostowapp:checked').length==1
-                                if (true) {
+                                var acceptCheckBox = document.querySelector('#accept.prostowapp');
+                                
+                                if (acceptCheckBox.checked) {
                                     var c_name = $('#client_name.prostowapp').val();
                                     var c_num = $('#client_number.prostowapp').val();
                                     let adminEmail = $('[name=adminemailprostowapp]').val();
@@ -1170,6 +1168,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                         server_url,
                                         formData,
                                         function (req_num) {
+                                            debugger;
                                             if (req_num) {
                                                 var req_succ = '<br><div class="server-success prostowapp"><div>Успешная отправка. Номер заявки: ' +
                                                     req_num + '.<br>' +
@@ -1180,9 +1179,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                             }
                                             else {
                                                 var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Некорректные имя или номер телефона.</div></div><br>';
-                                                $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                                $('br').remove();
-                                                $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
+                                                infoTabBlock.innerHTML = req_unsucc;
                                             }
                                         },
                                         'json',
@@ -1191,12 +1188,15 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                 }
                                 else {
                                     var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
-                                    $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                                    $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
+                                    infoTabBlock.innerHTML = req_unsucc;
                                 }
                             }
 
 
+                        }
+
+                        function infoSettings() {
+                            infoTabBlock.innerHTML = "<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=skyap&api=9052fb970cca41b482f4a7c6d37894aed4af7fc2'></iframe>";
                         }
 
                         function infoPay() {
@@ -1217,10 +1217,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                              </div></div>
                                              <br>Продлите виджет прямо сейчас!<br>`;
 
-                            if (finalDate > 0) {
-
-
-
+                            if (finalDate > currentDate) {
                                 infoTabBlock.innerHTML = findate + formPaymentNew;
                             }
                             else {
@@ -1258,8 +1255,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     'json',
                     function () { }
                 );
-
-
 
                 return true;
             },

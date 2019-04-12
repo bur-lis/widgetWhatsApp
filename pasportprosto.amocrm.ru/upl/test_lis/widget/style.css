@@ -425,3 +425,7 @@ img.queue.prostowapp {
     color: #063;
     cursor:pointer;
 }
+.settingsIframe {
+    width: 100%;
+    height: 500px;
+}
