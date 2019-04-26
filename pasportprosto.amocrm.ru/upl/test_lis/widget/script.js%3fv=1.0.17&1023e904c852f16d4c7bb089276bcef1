@@ -1058,59 +1058,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     <div class="btn-center prostowapp"><input type="submit" class="back prostowapp" value="ОПЛАТИТЬ"></div><br>
                     </form><br>` + contactsHtml;
 
-
-
-                var formData = {
-                    user_subdomain: user_subdomain,
-                    tool: 'client'
-                };
-                self.crm_post(
-                    server_url,
-                    formData,
-                    function (data) {
-                        var currentDate = Date.parse(new Date());
-                        var finalDate = Date.parse(data.date);
-                        var userState = data.state;
-
-                        var infoBlock = document.createElement("div");
-                        infoBlock.classList.add("widget_info_block");
-                        $(".widget-settings__desc-space")[0].appendChild(infoBlock);
-
-                        var menuBlock = document.createElement("div");
-                        menuBlock.classList.add("widget_menu_block");
-                        $(".widget_info_block")[0].appendChild(menuBlock);
-
-                        var descriptionTab = document.createElement("button");
-                        descriptionTab.classList.add("widget_tab_block");
-                        descriptionTab.innerHTML = "Полное описание";
-                        descriptionTab.id = 'descriptionTabId'
-                        $(".widget_menu_block")[0].appendChild(descriptionTab);
-
-                        var settingsTab = descriptionTab.cloneNode(true);
-                        settingsTab.innerText = 'Настройки';
-                        settingsTab.id = 'settingsTabId';
-                        $(".widget_menu_block")[0].appendChild(settingsTab);
-
-                        var paymentTab = descriptionTab.cloneNode(true);
-                        paymentTab.innerText = 'Оплата';
-                        paymentTab.id = 'paymentTabId';
-                        $(".widget_menu_block")[0].appendChild(paymentTab);
-
-                        var infoTabBlock = document.createElement("div");
-                        infoTabBlock.classList.add("widget_info_tab_block");
-                        $(".widget_info_block")[0].appendChild(infoTabBlock);
-
-                        var block3 = document.querySelector('#paymentTabId');
-                        block3.addEventListener('click', infoPay);
-
-                        var block1 = document.querySelector('#descriptionTabId');
-                        block1.addEventListener('click', infoDescription);
-
-                        var block2 = document.querySelector('#settingsTabId');
-                        block2.addEventListener('click', infoSettings);
-
-                        function infoDescription() {
-                            var description = `<div style = \" width = 600px;\"><br><br>
+                    var description = `<div style = \" width = 600px;\"><br><br>
                                                       <span style=\"font-weight:bold;\">Хватит терять клиентов! Будьте всегда с ними на связи!</span>
                                                       <br>С помощью этого виджета вы сможете отправлять сообщение клиенту прямо во время разговора.
                                                        Это позволяет менеджерам не тратить время на составление однотипных сообщений, не дает забыть прислать клиентам нужную информацию.
@@ -1140,6 +1088,25 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                                        * What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества,
                                                         количества контактов и частоты отправки. В случае бана системой What\'sApp
                                                         ответственности не несем.</div>`;
+
+                var formData = {
+                    user_subdomain: user_subdomain,
+                    tool: 'client'
+                };
+                self.crm_post(
+                    server_url,
+                    formData,
+                    function (data) {
+
+                        var currentDate = Date.parse(new Date());
+                        var finalDate = Date.parse(data.date);
+                        var userState = data.state;
+                        var inputConst = `<br><br>
+                                          <input type="checkbox" id="accept" class="prostowapp">
+                                          Согласен на обработку моих персональных данных.
+                                          <br><br>`;
+
+                        function infoDescription() {
 
                             infoTabBlock.innerHTML = description;
 
@@ -1191,14 +1158,11 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                     infoTabBlock.innerHTML = req_unsucc;
                                 }
                             }
-
-
                         }
-
                         function infoSettings() {
-                            infoTabBlock.innerHTML = "<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=skyap&api=9052fb970cca41b482f4a7c6d37894aed4af7fc2'></iframe>";
-                        }
-
+                            infoTabBlock.innerHTML = "<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=pasportprosto&api=2e2ba243b5616e9f0dd869be23d9868365c68462'></iframe>";
+                        }  
+                        
                         function infoPay() {
 
                             var localeDate = new Date(data.date).toLocaleString("ru", {
@@ -1208,49 +1172,126 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             });
 
                             var findate =
-                                `<br><br>
-                                             <input type="checkbox" id="accept" class="prostowapp">
-                                             Согласен на обработку моих персональных данных.
-                                             <br><br><br>
-                                             <div class="server-success prostowapp"><div>
-                                             Срок окончания оплаты: ${localeDate}
-                                             </div></div>
-                                             <br>Продлите виджет прямо сейчас!<br>`;
+                                        `<br><br>
+                                         <div class="server-success prostowapp"><div>
+                                         Срок окончания оплаты: ${localeDate}
+                                         </div></div>
+                                         <br>Продлите виджет прямо сейчас!<br>`;
 
                             if (finalDate > currentDate) {
                                 infoTabBlock.innerHTML = findate + formPaymentNew;
                             }
                             else {
-
-
-                                var content;
-                                if (false) {//data.subdomain) {
-                                    //content = findate+formPayment;
-                                    content = (userState === "start") ? formPaymentNew : formPayment;
-                                }
-                                else {
-                                    var findate2 =
-                                        `<br><br>
-                                             <input type="checkbox" id="accept" class="prostowapp">
-                                             Согласен на обработку моих персональных данных.
-                                             <br><br><br>
-                                             <button class="server-success prostowapp"><div>
-                                             Подключить тестовый период
-                                             </div></button>
-                                            <br><br>
-                                            Введите Ваш subdomen *:
-                                            <input type="text" size="30" id="client_subdomen" class="client-fields prostowapp">
-                                            <br>(subdomen - слова в ссылке, после https:\\ и до .amocrm.ru)
-                                            <br><br>
-                                            Введите Ваш API-ключ *:
-                                            <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
-                                            <br><br>
-                                             <br>Купите виджет прямо сейчас!<br>`;
-                                    content = findate2 + formPaymentNew;
-                                }
-                                infoTabBlock.innerHTML = content;
+                                infoTabBlock.innerHTML = `<br>Купите виджет прямо сейчас!<br>`+content;
                             }
                         }
+                        function infoConnection(){
+                            var content;
+                            if (false) {//data.subdomain) {
+                                //content = findate+formPayment;
+                                content = (userState === "start") ? formPaymentNew : formPayment;
+                            }
+                            else {
+                                var findate2 =
+                                        `<br>
+                                        Вы можете подключить тестовый период и попробывать весь его функцмонал.
+                                        <br><br><span style=\"font-weight:bold;\">Обратите внимание! </span><br> 
+                                        Тестовый виджет подключается только один раз на один день.<br>
+                                        Для подключения тестового периода необходимо заполнить все поля ниже
+                                        а так же поставить согласие на обработку данных.
+                                        <br><br>
+                                         <button class="server-success prostowapp"><div>
+                                         Подключить тестовый период
+                                         </div></button>
+                                        <br><br>
+                                        Ваш телефон *:
+                                        <input type="text" size="30" id="client_number" class="client-fields prostowapp">
+                                        <br><br>
+                                        Как к Вам обращаться *:
+                                        <input type="text" size="30" id="client_name" class="client-fields prostowapp">
+                                        <br><br>
+                                        Введите Ваш subdomen *:
+                                        <input type="text" size="30" id="client_subdomen" class="client-fields prostowapp">
+                                        <br>(subdomen - слова в ссылке, после https:\\ и до .amocrm.ru)
+                                        <br><br>
+                                        Введите Ваш API-ключ *:
+                                        <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
+                                        <br><br>
+                                        <span style=\"font-weight:bold;\">Для подключения виджета на более долгий срок необходимо:</span > 
+                                        <br>1) оплатить виджет на нужный срок
+                                        <br>2) заполнить все поля выше и поставить согласие на обработку данных.
+                                        <br><br>
+                                        <button class="back prostowapp"><div>
+                                         ПОДКЛЮЧИТЬ ВИДЖЕТ
+                                         </div></button>`;
+                                content = findate2;
+                            }
+                            infoTabBlock.innerHTML = findate2;
+                        }
+
+                        var infoBlock = document.createElement("div");
+                        infoBlock.classList.add("widget_info_block");
+                        $(".widget-settings__desc-space")[0].appendChild(infoBlock);
+
+                        infoBlock.innerHTML = inputConst;
+                        var menuBlock = document.createElement("div");
+                        menuBlock.classList.add("widget_menu_block");
+                        $(".widget_info_block")[0].appendChild(menuBlock);
+
+                        var infoTabBlock = document.createElement("div");
+                        infoTabBlock.classList.add("widget_info_tab_block");
+                        $(".widget_info_block")[0].appendChild(infoTabBlock);
+
+                        var descriptionTab = document.createElement("button");
+                        descriptionTab.classList.add("widget_tab_block");
+                        descriptionTab.innerHTML = "Полное описание";
+                        descriptionTab.id = 'descriptionTabId'
+                        $(".widget_menu_block")[0].appendChild(descriptionTab);
+
+                        var block1 = document.querySelector('#descriptionTabId');
+                        block1.addEventListener('click', infoDescription);
+
+                        var settingsTab = descriptionTab.cloneNode(true);
+                        settingsTab.innerText = 'Настройки';
+                        settingsTab.id = 'settingsTabId';
+
+                        var paymentTab = descriptionTab.cloneNode(true);
+                        paymentTab.innerText = 'Оплата';
+                        paymentTab.id = 'paymentTabId';
+
+                        var connectionTab = descriptionTab.cloneNode(true);
+                        connectionTab.innerText = 'Подключение';
+                        connectionTab.id = 'connectionTabId';
+
+                        ///////////////////////////////////////////////////////
+                        //////////////////////////////////////////////////////
+
+                        if (false){//finalDate > currentDate) {
+                            $(".widget_menu_block")[0].appendChild(settingsTab);
+                            $(".widget_menu_block")[0].appendChild(paymentTab);
+
+                        
+                            var block2 = document.querySelector('#settingsTabId');
+                            block2.addEventListener('click', infoSettings);
+
+                            var block3 = document.querySelector('#paymentTabId');
+                            block3.addEventListener('click', infoPay);
+                        }
+                        else {
+                            $(".widget_menu_block")[0].appendChild(connectionTab);
+                            $(".widget_menu_block")[0].appendChild(paymentTab);
+    
+                            
+                            var block2 = document.querySelector('#connectionTabId');
+                            block2.addEventListener('click', infoConnection);
+    
+                            var block3 = document.querySelector('#paymentTabId');
+                            block3.addEventListener('click', infoPay);
+                        }
+
+                        ////////////////////////////////////////////////////////////
+                        ///////////////////////////////////////////////////////////
+   
                     },
                     'json',
                     function () { }

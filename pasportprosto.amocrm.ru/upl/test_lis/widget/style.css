@@ -37,7 +37,9 @@ div[class*="server-"].prostowapp {
 }
 
 .btn-center.prostowapp {
-    width: 100%;
+    width: 30%;
+    /* height: 30px; */
+    margin: auto;
     text-align: -webkit-center;
     text-align: -moz-center;
     text-align: center;
@@ -146,6 +148,8 @@ span.big-number.prostowapp {
 .back.prostowapp {
     background-image: linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
     background-image: -webkit-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
+    width: 100%;
+    height: 60px;
     background-image: -moz-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
     background-image: -o-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
     background-image: -ms-linear-gradient(#FFCC00, #FFCC33 40%, #FFCC66);
@@ -341,6 +345,7 @@ img.queue.prostowapp {
 
 .client-fields.prostowapp {
     border-bottom: 1px solid #555;
+    width: 350px;
 }
 
 #success_request.prostowapp {

@@ -20,15 +20,10 @@
         "settings"
     ],
     "settings": {
-        "adminemailprostowapp": {
-            "name": "settings.adminemailprostowapp",
-            "type": "text",
-            "required": true
-        },
-        "apikeyprostowapp": {
-            "name": "settings.apikeyprostowapp",
-            "type": "text",
-            "required": true
-        }
+        "apikeyprostowapp":{
+                "name": "settings.apikeyprostowapp",
+                "type": "text",
+                "required": true
+              }
     }
 }
