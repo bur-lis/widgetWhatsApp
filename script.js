@@ -3,9 +3,11 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         var self = this;
         var w_code;
         var server_url = 'https://prosto.group/dashboard/whatsapp_widget/db_message.php';
-        var user_subdomain = AMOCRM.widgets.system.subdomain;
+        var user_subdomain = 'MOISLOL';
+        // var user_subdomain = AMOCRM.widgets.system.subdomain;
         var files;
-        var moneybag = '41001137689349';
+        var moneybag = '410019308017790';
+        // var moneybag = '41001137689349';
         var contactsHtml = '<div class="prostowapp contacts">Пишите нам на почту: rivza.kat@prosto.group<br>Звоните или пишите в What\'sApp: +7 (900) 654-63-01<br>';
         var contactsEmail = '<div class="prostowapp contacts">Напишите нам на почту: rivza.kat@prosto.group\n</div>';
         var blockInfo = {};
@@ -1028,7 +1030,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             <input type="text" size="30" id="client_name" class="client-fields prostowapp">
                             <br><br>
                             Ваш телефон *:
-                            <input type="text" size="30" id="client_number" class="client-fields prostowapp">
+                            <input type="tel" size="30" id="client_number" class="client-fields prostowapp">
                             <br><br>
                             <input type="checkbox" id="accept" class="prostowapp">
                             Согласен на обработку моих персональных данных.
@@ -1037,16 +1039,17 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             <input type="button" class="back prostowapp" id="send-request" value="ОСТАВИТЬ ЗАЯВКУ">
                             </div><br><br>`;
 
-                var formPaymentNew = `
+                function formPaymentNew(name_pay_button) {
+                    return `
                     <br><form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">
-                    <input type="hidden" name="receiver" value="' + moneybag + '">
-                    <input type="hidden" name="label" value="widgetWA' + user_subdomain + '">
+                    <input type="hidden" name="receiver" value="${moneybag}">
+                    <input type="hidden" name="label" value="${user_subdomain}">
                     <input type="hidden" name="quickpay-form" value="donate">
                     <input type="hidden" name="targets" value="Оплата виджета What\'sApp">
-                    <label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2500" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div></label>
+                    <label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2 руб.</span></div></div></label>
                     <label for="treemonthInput"><div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>На 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div></label>
                     <label for="sixmonthInput"><div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>На полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div></label>
-                    <label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>
+                    <label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="26000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>
                     <input type="hidden" name="comment" value="">
                     <input type="hidden" name="need-fio" value="false">
                     <input type="hidden" name="need-email" value="false">
@@ -1055,40 +1058,69 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     <br>Выберете способ оплаты:<br>
                     <input type="radio" name="paymentType" value="PC"> Яндекс.Деньги<br>
                     <input type="radio" name="paymentType" value="AC"> Банковская карта<br><br>
-                    <div class="btn-center prostowapp"><input type="submit" class="back prostowapp" value="ОПЛАТИТЬ"></div><br>
+                    <div class="btn-center prostowapp"><input id="paymentButton" type="submit" class="back prostowapp" value="${name_pay_button}"></div><br>
                     </form><br>` + contactsHtml;
+                }
 
-                    var description = `<div style = \" width = 600px;\"><br><br>
-                                                      <span style=\"font-weight:bold;\">Хватит терять клиентов! Будьте всегда с ними на связи!</span>
-                                                      <br>С помощью этого виджета вы сможете отправлять сообщение клиенту прямо во время разговора.
-                                                       Это позволяет менеджерам не тратить время на составление однотипных сообщений, не дает забыть прислать клиентам нужную информацию.
-                                                       Так же это напрямую влияет на повышение лояльности клиентов.<br><br><span style=\"font-weight:bold;\">
-                                                       При создании сообщения вы можете составлять его из блоков двух видов:</span>
-                                                       <ul><li>обычный текстовый блок, отражающий отдельную смысловую часть сообщения;</li>
-                                                       <li>текстовый блок со списком множественного выбора, который позволяет использовать перечисление в своих сообщениях.</li></ul>
-                                                       <br><span style=\"font-weight:bold;\">
-                                                       Также в виджете изначально есть текстовые блоки по умолчанию (их нельзя удалить):</span>
-                                                       <ul><li>Начало сообщения;</li><li>Конец сообщения;</li><li>P.S.</li></ul>
-                                                       <br><span style=\"font-weight:bold;\">Ваши результаты работы с виджетом What’s App:</span>
-                                                       <ul><li>Увеличится конверсия (ваши клиенты будут получать информацию не только устно, но и письменно);</li>
-                                                       <li>Время обработки лидов уменьшится, за счет сокращения работы менеджеров над создание однотипных сообщений;</li>
-                                                       <li>Лояльность клиентов повысится (они увидят, что вы на связи и всегда смогут ответить вам прямо в мессенджере);</li>
-                                                       <li>Появится дополнительный канал;</li><li>Повысится узнаваемость компании;</li>
-                                                       <li>Появится возможность коммуницировать с клиентами, даже когда он не может говорить по телефону.</li></ul>
-                                                       <br><span style=\"font-weight:bold;\">Как получить виджет:</span>
-                                                       <ul><li>Вы оставляете нам заявку, и мы перезваниваем вам для ее подтверждения, а после - ждем оплаты;</li>
-                                                       <li>Вы оплачиваете виджет, и мы регистрируем вас в системе WhatsApp (для этого потребуется отсканировать qr-код);</li>
-                                                       <li>Мы даем вам доступ к виджету.</li></ul><br><span style=\"font-weight:bold;\">Как это работает?</span>
-                                                       <br>Мы подготовили скринкаст, который покажет вам функционал виджета и его простоту использования.<br>
-                                                       <br><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lkBIHZKUUP0?rel=0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>
-                                                       <br><br>Мы предоставляем вам 1 день теста, чтобы вы могли попробовать наш продукт в своем бизнесе.<br>
-                                                       <br><span style=\"font-weight:bold;\">FAQ по виджету:</span> https://prosto.group/faq/<br><br>
-                                                       <span style=\"font-weight:bold;\"> Оставьте заявку и наш разработчик ответит на все возникшие у вас вопросы!</span>
-                                                       <br><br></div>`+ formRequest + contactsHtml + `<br>
-                                                       * What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества,
-                                                        количества контактов и частоты отправки. В случае бана системой What\'sApp
-                                                        ответственности не несем.</div>`;
-
+                var description = `<div style = \" width = 600px;\"><br><br>
+                                      <span style=\"font-weight:bold;\">Хватит терять клиентов! Будьте всегда с ними на связи!</span>
+                                      <br>С помощью этого виджета вы сможете отправлять сообщение клиенту прямо во время разговора.
+                                       Это позволяет менеджерам не тратить время на составление однотипных сообщений, не дает забыть прислать клиентам нужную информацию.
+                                       Так же это напрямую влияет на повышение лояльности клиентов.<br><br><span style=\"font-weight:bold;\">
+                                       При создании сообщения вы можете составлять его из блоков двух видов:</span>
+                                       <ul><li>обычный текстовый блок, отражающий отдельную смысловую часть сообщения;</li>
+                                       <li>текстовый блок со списком множественного выбора, который позволяет использовать перечисление в своих сообщениях.</li></ul>
+                                       <br><span style=\"font-weight:bold;\">
+                                       Также в виджете изначально есть текстовые блоки по умолчанию (их нельзя удалить):</span>
+                                       <ul><li>Начало сообщения;</li><li>Конец сообщения;</li><li>P.S.</li></ul>
+                                       <br><span style=\"font-weight:bold;\">Ваши результаты работы с виджетом What’s App:</span>
+                                       <ul><li>Увеличится конверсия (ваши клиенты будут получать информацию не только устно, но и письменно);</li>
+                                       <li>Время обработки лидов уменьшится, за счет сокращения работы менеджеров над создание однотипных сообщений;</li>
+                                       <li>Лояльность клиентов повысится (они увидят, что вы на связи и всегда смогут ответить вам прямо в мессенджере);</li>
+                                       <li>Появится дополнительный канал;</li><li>Повысится узнаваемость компании;</li>
+                                       <li>Появится возможность коммуницировать с клиентами, даже когда он не может говорить по телефону.</li></ul>
+                                       <br><span style=\"font-weight:bold;\">Как получить виджет:</span>
+                                       <ul><li>Вы оставляете нам заявку, и мы перезваниваем вам для ее подтверждения, а после - ждем оплаты;</li>
+                                       <li>Вы оплачиваете виджет, и мы регистрируем вас в системе WhatsApp (для этого потребуется отсканировать qr-код);</li>
+                                       <li>Мы даем вам доступ к виджету.</li></ul><br><span style=\"font-weight:bold;\">Как это работает?</span>
+                                       <br>Мы подготовили скринкаст, который покажет вам функционал виджета и его простоту использования.<br>
+                                       <br><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lkBIHZKUUP0?rel=0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>
+                                       <br><br>Мы предоставляем вам 1 день теста, чтобы вы могли попробовать наш продукт в своем бизнесе.<br>
+                                       <br><span style=\"font-weight:bold;\">FAQ по виджету:</span> https://prosto.group/faq/<br><br>
+                                       <span style=\"font-weight:bold;\"> Оставьте заявку и наш разработчик ответит на все возникшие у вас вопросы!</span>
+                                       <br><br></div>`+ formRequest + contactsHtml + `<br>
+                                       * What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества,
+                                        количества контактов и частоты отправки. В случае бана системой What\'sApp
+                                        ответственности не несем.</div>`;
+                var content;
+                var conect_test_button =
+                    `<br>
+                                     Вы можете подключить тестовый период и попробывать весь его функцмонал.
+                                     <br><br><span style=\"font-weight:bold;\">Обратите внимание! </span><br> 
+                                     Тестовый виджет подключается только один раз на один день.<br>`
+                var conect_info =
+                    `<br>Для подключения тестового периода необходимо заполнить все поля ниже
+                                     а так же поставить согласие на обработку данных.
+                                     <br><br>
+                                      <button class="server-success prostowapp"><div>
+                                      Подключить тестовый период
+                                      </div></button>
+                                     <br><br>
+                                     Ваш телефон *:
+                                     <input type="tel" size="30" id="client_number" class="client-fields prostowapp">
+                                     <br><br>
+                                     Как к Вам обращаться *:
+                                     <input type="text" size="30" id="client_name" class="client-fields prostowapp">
+                                     <br><br>
+                                     Ваш API-ключ *:
+                                     <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
+                                     <br><br>`
+                var conect_info_pay =
+                    `<span style=\"font-weight:bold;\">Для подключения виджета на более долгий срок необходимо:</span > 
+                                     <br><br>1) оплатить виджет на нужный срок`
+                var conect_info_pay2 =
+                    `<br>2) заполнить все поля выше и поставить согласие на обработку данных.
+                                     <br><br>`;
                 var formData = {
                     user_subdomain: user_subdomain,
                     tool: 'client'
@@ -1115,7 +1147,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                             function sendRequst() {
                                 var acceptCheckBox = document.querySelector('#accept.prostowapp');
-                                
+
                                 if (acceptCheckBox.checked) {
                                     var c_name = $('#client_name.prostowapp').val();
                                     var c_num = $('#client_number.prostowapp').val();
@@ -1160,9 +1192,9 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             }
                         }
                         function infoSettings() {
-                            infoTabBlock.innerHTML = `<br><br>`+"<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=pasportprosto&api=2e2ba243b5616e9f0dd869be23d9868365c68462'></iframe>";
-                        }  
-                        
+                            infoTabBlock.innerHTML = "<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=pasportprosto&api=2e2ba243b5616e9f0dd869be23d9868365c68462'></iframe>";
+                        }
+
                         function infoPay() {
 
                             var localeDate = new Date(data.date).toLocaleString("ru", {
@@ -1172,61 +1204,65 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             });
 
                             var findate =
-                                        `<br><br>
+                                `<br><br>
                                          <div class="server-success prostowapp"><div>
                                          Срок окончания оплаты: ${localeDate}
                                          </div></div>
                                          <br>Продлите виджет прямо сейчас!<br>`;
 
-                            if (finalDate > currentDate) {
-                                infoTabBlock.innerHTML = findate + formPaymentNew;
+                            if (false) { //finalDate > currentDate) {
+                                infoTabBlock.innerHTML = findate + formPaymentNew("ОПЛАТИТЬ");
                             }
                             else {
-                                infoTabBlock.innerHTML = `<br>Купите виджет прямо сейчас!<br>`+content;
+                                infoTabBlock.innerHTML += formPaymentNew("ПОДКЛЮЧИТЬ");
                             }
                         }
-                        function infoConnection(){
-                            var content;
-                            if (false) {//data.subdomain) {
-                                //content = findate+formPayment;
-                                content = (userState === "start") ? formPaymentNew : formPayment;
+                        function infoConnection() {
+
+                            switch (userState) {
+                                case 'start':
+                                    content = conect_test_button + conect_info_pay;
+                                    break;
+                                case 'end':
+                                case 'test':
+                                    content = conect_info_pay;
+                                    break;
+                                default:
+                                    content = conect_test_button + conect_info + conect_info_pay + conect_info_pay2;
+                                    break;
                             }
-                            else {
-                                var findate2 =
-                                        `<br>
-                                        Вы можете подключить тестовый период и попробывать весь его функцмонал.
-                                        <br><br><span style=\"font-weight:bold;\">Обратите внимание! </span><br> 
-                                        Тестовый виджет подключается только один раз на один день.<br>
-                                        Для подключения тестового периода необходимо заполнить все поля ниже
-                                        а так же поставить согласие на обработку данных.
-                                        <br><br>
-                                         <button class="server-success prostowapp"><div>
-                                         Подключить тестовый период
-                                         </div></button>
-                                        <br><br>
-                                        Ваш телефон *:
-                                        <input type="text" size="30" id="client_number" class="client-fields prostowapp">
-                                        <br><br>
-                                        Как к Вам обращаться *:
-                                        <input type="text" size="30" id="client_name" class="client-fields prostowapp">
-                                        <br><br>
-                                        Введите Ваш subdomen *:
-                                        <input type="text" size="30" id="client_subdomen" class="client-fields prostowapp">
-                                        <br>(subdomen - слова в ссылке, после https:\\ и до .amocrm.ru)
-                                        <br><br>
-                                        Введите Ваш API-ключ *:
-                                        <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
-                                        <br><br>
-                                        <span style=\"font-weight:bold;\">Для подключения виджета на более долгий срок необходимо:</span > 
-                                        <br>1) оплатить виджет на нужный срок
-                                        <br>2) заполнить все поля выше и поставить согласие на обработку данных.
-                                        <br><br>
-                                        <button class="back prostowapp"><div>
-                                         ПОДКЛЮЧИТЬ ВИДЖЕТ
-                                         </div></button>`;
-                                content = findate2;
+
+                            infoTabBlock.innerHTML = content;
+                            infoPay();
+
+                            if (userState == false) {
+                                document.querySelector("#paymentButton").addEventListener('click', addNewUser)
+
+                                function addNewUser() {
+                                    const client_number = document.querySelector("#client_number").value;
+                                    const client_name = document.querySelector("#client_name").value;
+                                    const apikey_subdomen = document.querySelector("#apikey_subdomen").value;
+
+                                    var formData = {
+                                        client_number: client_number,
+                                        client_name: client_name,
+                                        apikey_subdomen: apikey_subdomen,
+                                        client_subdomain: user_subdomain
+                                    };
+
+                                    self.crm_post(
+                                        'https://prosto.group/dashboard/whatsapp_widget_lis/addNewUser.php',
+                                        formData,
+                                        function (res) {
+                                            debugger
+                                        },
+                                        'json',
+                                        function () {
+                                            console.error('Ошибка');
+                                        }
+                                    );
+                                }
                             }
-                            infoTabBlock.innerHTML = findate2;
                         }
 
                         var infoBlock = document.createElement("div");
@@ -1265,33 +1301,29 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                         ///////////////////////////////////////////////////////
                         //////////////////////////////////////////////////////
+                        switch (userState) {
+                            case 'used':
+                                $(".widget_menu_block")[0].appendChild(settingsTab);
+                                $(".widget_menu_block")[0].appendChild(paymentTab);
 
-                        if (finalDate > currentDate) {
-                            $(".widget_menu_block")[0].appendChild(settingsTab);
-                            $(".widget_menu_block")[0].appendChild(paymentTab);
 
-                        
-                            var block2 = document.querySelector('#settingsTabId');
-                            block2.addEventListener('click', infoSettings);
+                                var block2 = document.querySelector('#settingsTabId');
+                                block2.addEventListener('click', infoSettings);
 
-                            var block3 = document.querySelector('#paymentTabId');
-                            block3.addEventListener('click', infoPay);
-                        }
-                        else {
-                            $(".widget_menu_block")[0].appendChild(connectionTab);
-                            $(".widget_menu_block")[0].appendChild(paymentTab);
-    
-                            
-                            var block2 = document.querySelector('#connectionTabId');
-                            block2.addEventListener('click', infoConnection);
-    
-                            var block3 = document.querySelector('#paymentTabId');
-                            block3.addEventListener('click', infoPay);
+                                var block3 = document.querySelector('#paymentTabId');
+                                block3.addEventListener('click', infoPay);
+                                break;
+
+                            default:
+                                $(".widget_menu_block")[0].appendChild(connectionTab);
+                                var block2 = document.querySelector('#connectionTabId');
+                                block2.addEventListener('click', infoConnection);
+                                break;
                         }
 
                         ////////////////////////////////////////////////////////////
                         ///////////////////////////////////////////////////////////
-   
+
                     },
                     'json',
                     function () { }
