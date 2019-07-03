@@ -2,14 +2,14 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
     var CustomWidget = function () {
         var self = this;
         var w_code;
-        var server_url = 'https://prosto.group/dashboard/whatsapp_widget/db_message.php';
-        var user_subdomain = 'MOISLOL';
-        // var user_subdomain = AMOCRM.widgets.system.subdomain;
+        var server_url = 'https://prosto.group/dashboard/whatsapp_widget_lis/db_message.php';
+        var user_email = AMOCRM.widgets.system.amouser;
+        // var user_subdomain = 'mois';
+        var user_subdomain = AMOCRM.widgets.system.subdomain;
         var files;
         var moneybag = '410019308017790';
         // var moneybag = '41001137689349';
-        var contactsHtml = '<div class="prostowapp contacts">Пишите нам на почту: rivza.kat@prosto.group<br>Звоните или пишите в What\'sApp: +7 (900) 654-63-01<br>';
-        var contactsEmail = '<div class="prostowapp contacts">Напишите нам на почту: rivza.kat@prosto.group\n</div>';
+        var contactsHtml = '<div class="prostowapp contacts">Пишите нам на почту: rivza.kat@prosto.group<br> или в What\'sApp: +7 (900) 654-63-01<br>';
         var blockInfo = {};
 
         var positionsInfo = {};
@@ -84,8 +84,12 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             }
 
             message = $('#wa_message.prostowapp').val();
+            var preloder = $('#already').html('<div style = "margin: 0px 150px;"><img  src="' + self.params.path + '/images/preloader.gif"></div>');
 
-            if (!(receivers.every(emptyI))) {
+            if (!(receivers.every(emptyI))) { 
+
+                preloder.show();
+                $('#already-send.prostowapp').hide();
                 receivers = receivers.filter(notemptyI);
 
                 self.crm_post(
@@ -97,24 +101,26 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                         tool: 'sending'
                     },
                     function (data) {
-                        if (data.every(succ)) {
+                        if (data.success) {
                             self.load(receivers);
-                        }
-                        else {
+                        } else {
                             $('#already-send.prostowapp').attr('class', 'server-error prostowapp');
-                            $('#already-send.prostowapp').html('<div>Произошла ошибка (с отправки текста пришло не все success)</div>').show();
+                            $('#already-send.prostowapp').html(`<div>Произошла ошибка (${data['message']})</div>`).show();
+                            preloder.hide();
                         }
                     },
                     'json',
                     function () {
                         $('#already-send.prostowapp').attr('class', 'server-error prostowapp');
-                        $('#already-send.prostowapp').html('<div>Произошла ошибка (не смог отправить текст)</div>').show();
+                        $('#already-send.prostowapp').html('<div>Произошла ошибка (сообщение не отправлено)</div>').show();
+                        preloder.hide();
                     }
                 );
             }
             else {
                 $('#already-send.prostowapp').attr('class', 'server-no-contacts prostowapp');
                 $('#already-send.prostowapp').html('<div>Не выбран ни один контакт</div>').show();
+                preloder.hide();
             }
         };
 
@@ -138,19 +144,29 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 contentType: false,
                 dataType: 'json',
                 success: function (data) {
+                    var preloder = $('#already').html('<div style = "margin: 0px 150px;"><img  src="' + self.params.path + '/images/preloader.gif"></div>');
                     if (data.every(succ)) {
                         $('#already-send.prostowapp').attr('class', 'server-success prostowapp');
-                        $('#already-send.prostowapp').html('<div>Сообщение отправлено</div>').show();
+                        var messageSucsess = $('#already-send.prostowapp').html('<div>Сообщение отправлено</div>');
+                        preloder.hide();
+                        messageSucsess.show();
+                        setTimeout(function() {
+                            messageSucsess.hide();
+                            self.msgGeneration();
+                            $('#free-message-chbox.prostowapp').prop('disabled',false);
+                        }, 2000);
                     }
                     else {
                         $('#already-send.prostowapp').attr('class', 'server-error prostowapp');
                         $('#already-send.prostowapp').html('<div>Произошла ошибка (с отправки файла пришло не все success)</div>').show();
+                        preloder.hide();
                     }
                 },
                 error: function () {
                     $('#already-send.prostowapp').attr('class', 'server-error prostowapp');
                     $('#already-send.prostowapp').html('<div>Произошла ошибка (не смог отправить файл)</div>').show();
-                }
+                    preloder.hide();
+                    }
             });
         };
 
@@ -178,7 +194,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         };
 
         this.messageRender = function () {
-            var divContainer, textMessage, btnSend, divAlready, btnHiddenFile, fileName;
+            var divContainer, textMessage, btnSend, divAlready, divAlready1, btnHiddenFile, fileName;
             var len;
 
             divContainer = '<div id="contacts-list-container" class="prostowapp"></div>';
@@ -204,9 +220,10 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 '<div id="add-file" class="add-file-btn prostowapp" style="display:inline-block;" ><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div><br>';
             btnHiddenFile = '<input hidden multiple type="file" id="file" class="prostowapp">';
             fileName = '<span id="filename" class="prostowapp"></span><br>';
+            divAlready1 = '<div id="already"></div>';
             divAlready = '<div id="already-send" class="prostowapp"></div>';
 
-            $('#t-message.prostowapp').append(divContainer, textMessage, btnSend, btnHiddenFile, fileName, divAlready);
+            $('#t-message.prostowapp').append(divContainer, textMessage, btnSend, btnHiddenFile, fileName, divAlready1, divAlready);
 
             self.contacts = self.getLcardInfo();
             self.contactsRender(self.contacts);
@@ -240,7 +257,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
             });
         };
-
 
         this.msgGeneration = function () {
             var message = '';
@@ -355,7 +371,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             });
 
             var freeMessage = '<div id="free-message-container" class="prostowapp">' +
-                '<input type="checkbox" id="free-message-chbox" class="prostowapp"> Написать сообщение в свободной форме' +
+                '<label><input type="checkbox" id="free-message-chbox" class="prostowapp"> Написать сообщение в свободной форме</label>' +
                 '</div>';
             $('#t-list.prostowapp').append(freeMessage);
 
@@ -398,7 +414,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     var currentDate = Date.parse(new Date());
                     var finalDate = Date.parse(data.date);
                     var state = data.state;
-                    if ((finalDate > currentDate) && (state === 'used')) {
+                    if (state === 'used' || state === 'test') {
                         // self.serverData();
 
                         w_code = self.get_settings().widget_code;
@@ -719,122 +735,14 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
             self.templateRender();
         };
-
-        this.loadBlackList = function () {
-            var data = {
-                subdomain: user_subdomain
-            };
-
-            $.ajax({
-                url: 'https://prosto.group/dashboard/whatsapp_widget/load_black_list.php',
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                success: function (data) {
-                    $('#black-list-container').html('');
-                    if (data.length != 0) {
-                        $('#black-list-container').append("Номера, добавленные в черный список:<br>");
-
-                        for (var i = 0; i < data.length; i++) {
-                            $('#black-list-container').append('<span id="' + data[i] + '" class="prostowapp delete-black-number">x </span>');
-                            $('#black-list-container').append('+7' + data[i] + "<br>");
-                        }
-
-                        $('#black-list-container').append("<br>");
-
-                        $('#black-list-container').show();
-                    }
-
-                    $('.delete-black-number.prostowapp').on('click', function (e) {
-                        var numberId = $(e.target).attr('id');
-
-                        var data = {
-                            subdomain: user_subdomain,
-                            number: numberId
-                        };
-
-                        $.ajax({
-                            url: 'https://prosto.group/dashboard/whatsapp_widget/delete_black_number.php',
-                            type: 'POST',
-                            data: data,
-                            success: function () {
-                                $('#add-black-number-result.prostowapp').attr('class', 'server-success prostowapp');
-                                $('#add-black-number-result.prostowapp').html('<div>Номер удален</div>').show();
-                                $('#br-br-container.prostowapp').show();
-                                self.loadBlackList();
-                            },
-                            error: function () {
-                            }
-                        });
-                    });
-                },
-                error: function () {
-                }
-            });
-        };
-
-        this.setttingsContent = function () {
-            $('#prostowapp-settings-modal').html('');
-            $('#prostowapp-settings-modal').append('<span class="modal-body__close"><span class="icon icon-modal-close"></span></span>');
-
-            var content = 'Добавьте номера в черный список, и история сообщений по ним не будет фиксироваться в сделках.<br><br>' +
-                '<input type="text" id="black-number-input" class="prostowapp"><button id="add-black-number-btn" class="prostowapp back">Добавить</button><br><br>' +
-                '<div class="prostowapp" id="add-black-number-result" hidden></div>' +
-                '<div class="prostowapp" id="br-br-container" hidden><br></div>' +
-                '<div class="prostowapp" id="black-list-container" hidden></div>';
-
-            $('#prostowapp-settings-modal').append(content);
-
-            $('#add-black-number-btn.prostowapp').on('click', function () {
-                var number = $('#black-number-input.prostowapp').val().replace(/\D/g, '').substr(-10, 10);
-
-                if (!number) {
-                    $('#add-black-number-result.prostowapp').attr('class', 'server-no-contacts prostowapp');
-                    $('#add-black-number-result.prostowapp').html('<div>Номер не может быть пустым</div>').show();
-                    $('#br-br-container.prostowapp').show();
-                }
-                else {
-                    var data = {
-                        subdomain: user_subdomain,
-                        number: number
-                    };
-                    $.ajax({
-                        url: 'https://prosto.group/dashboard/whatsapp_widget/add_black_number.php', //только здесь поменять субдомен на унифицированный
-                        type: 'POST',
-                        data: data,
-                        dataType: 'json',
-                        success: function (data) {
-                            if (parseInt(data)) {
-                                $('#add-black-number-result.prostowapp').attr('class', 'server-success prostowapp');
-                                $('#add-black-number-result.prostowapp').html('<div>Номер добавлен</div>').show();
-                                $('#br-br-container.prostowapp').show();
-                                self.loadBlackList();
-                            }
-                            else {
-                                $('#add-black-number-result.prostowapp').attr('class', 'server-no-contacts prostowapp');
-                                $('#add-black-number-result.prostowapp').html('<div>Данный номер уже добавлен</div>').show();
-                                $('#br-br-container.prostowapp').show();
-                            }
-                        },
-                        error: function () {
-                            $('#add-black-number-result.prostowapp').attr('class', 'server-error prostowapp');
-                            $('add-black-number-result.prostowapp').html('<div>Произошла ошибка на сервере</div>').show();
-                            $('#br-br-container.prostowapp').show();
-                        }
-                    });
-                }
-            });
-
-            self.loadBlackList();
-        };
-
+        
         this.adminToolbar = function () {
             var headersArr = $('.t-menu-style-head.prostowapp');
 
-            var addButton = '<input type="button" value="ДОБАВИТЬ БЛОК" class="add-tool back prostowapp" id="add-block">';
+            var addButton = '<input type="button" style = "margin: 20px 0px 0px 0px;" value="ДОБАВИТЬ БЛОК" class="add-tool back prostowapp" id="add-block">';
             var settingsButton = '<input type="button" value="НАСТРОЙКИ" class="back2 prostowapp" id="widget-settings"><br><br>';
 
-            $('#t-list.prostowapp').prepend(addButton, settingsButton);
+            $('#t-list.prostowapp').prepend(addButton);
 
             var qIcon;
             var i;
@@ -848,14 +756,12 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             '<img src="' + self.params.path + '/images/down.png" ' +
                             'class="queue prostowapp" data-prostowapp-dir="down" id="' + $(headersArr[i]).attr('id') + '">' +
                             '</div>';
-                    }
-                    else if (i == headersArr.length - 3) {
+                    } else if (i == headersArr.length - 3) {
                         qIcon = '<div>' +
                             '<img src="' + self.params.path + '/images/up.png" ' +
                             'class="queue prostowapp" data-prostowapp-dir="up" id="' + $(headersArr[i]).attr('id') + '">' +
                             '</div>';
-                    }
-                    else {
+                    } else {
                         qIcon = '<div>' +
                             '<img src="' + self.params.path + '/images/up.png" ' +
                             'class="queue prostowapp" data-prostowapp-dir="up" id="' + $(headersArr[i]).attr('id') + '"><br>' +
@@ -865,8 +771,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     }
 
                     $(headersArr[i]).prepend(qIcon);
-                }
-                else {
+                } else {
                     $(headersArr[i]).children().first().css('margin-left', '37px');
                 }
             }
@@ -968,28 +873,12 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             $('img.queue.prostowapp').click(function (e) {
                 self.queueChange($(e.target).attr('id'), $(e.target).attr('data-prostowapp-dir'));
             });
-
-            $('#widget-settings.prostowapp').click(function () {
-                modal = new Modal({
-                    class_name: 'modal-window',
-                    init: function ($modal_body) {
-                        $modal_body
-                            .trigger('modal:loaded')
-                            .attr("id", "prostowapp-settings-modal");
-
-                        self.setttingsContent();
-                        $modal_body.trigger('modal:centrify');
-                    },
-                    destroy: function () {
-                    }
-                });
-            });
         };
 
         this.callbacks = {
 
             render: function () {
-                $('head').append('<link type="text/css" rel="stylesheet" href="' + self.params.path + '/style.css" >');
+                $('head').append(`<link type="text/css" rel="stylesheet" href="${self.params.path}/style.css" >`);
                 if (self.system().area == 'lcard') {
                     self.userAccess();
                 }
@@ -1020,6 +909,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             settings: function () {
                 w_code = self.get_settings().widget_code;
 
+                $('.widget_settings_block__fields').hide();
                 $('.modal-body').css('width', '620');
 
                 var switcher = $('.modal-body').find('.widget_settings_block__switch');
@@ -1046,18 +936,18 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     <input type="hidden" name="label" value="${user_subdomain}">
                     <input type="hidden" name="quickpay-form" value="donate">
                     <input type="hidden" name="targets" value="Оплата виджета What\'sApp">
-                    <label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="2" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2 руб.</span></div></div></label>
+                    <label for="onemonthInput"><div id="onemonth"  class="payment prostowapp"><br><input id="onemonthInput" type="radio" name="sum" value="100" data-type="number"><div>На 1 месяц<br><span class="big-number prostowapp">2500 руб.</span></div></div></label>
                     <label for="treemonthInput"><div id="treemonth"class="payment prostowapp"><br><input id="treemonthInput" type="radio" name="sum" value="7200" data-type="number"><div>На 3 месяца<br><span class="big-number prostowapp">7200 руб.</span></div></div></label>
                     <label for="sixmonthInput"><div id="sixmonth" class="payment prostowapp"><br><input id="sixmonthInput" type="radio" name="sum" value="13800" data-type="number"><div>На полгода<br><span class="big-number prostowapp">13800 руб.</span></div></div></label>
-                    <label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="26000" data-type="number"><div>На год<br><span class="big-number prostowapp">26000 руб.</span></div></div><br><br></label>
+                    <label for="oneyearInput"><div id="oneyear"class="payment prostowapp"><br><input id="oneyearInput" type="radio" name="sum" value="26300" data-type="number"><div>На год<br><span class="big-number prostowapp">26300 руб.</span></div></div><br><br></label>
                     <input type="hidden" name="comment" value="">
                     <input type="hidden" name="need-fio" value="false">
                     <input type="hidden" name="need-email" value="false">
                     <input type="hidden" name="need-phone" value="false">
                     <input type="hidden" name="need-address" value="false">
                     <br>Выберете способ оплаты:<br>
-                    <input type="radio" name="paymentType" value="PC"> Яндекс.Деньги<br>
-                    <input type="radio" name="paymentType" value="AC"> Банковская карта<br><br>
+                    <label><input type="radio" name="paymentType" value="PC"> Яндекс.Деньги</label><br>
+                    <label><input type="radio" name="paymentType" value="AC"> Банковская карта</label><br><br>
                     <div class="btn-center prostowapp"><input id="paymentButton" type="submit" class="back prostowapp" value="${name_pay_button}"></div><br>
                     </form><br>` + contactsHtml;
                 }
@@ -1079,10 +969,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                        <li>Лояльность клиентов повысится (они увидят, что вы на связи и всегда смогут ответить вам прямо в мессенджере);</li>
                                        <li>Появится дополнительный канал;</li><li>Повысится узнаваемость компании;</li>
                                        <li>Появится возможность коммуницировать с клиентами, даже когда он не может говорить по телефону.</li></ul>
-                                       <br><span style=\"font-weight:bold;\">Как получить виджет:</span>
-                                       <ul><li>Вы оставляете нам заявку, и мы перезваниваем вам для ее подтверждения, а после - ждем оплаты;</li>
-                                       <li>Вы оплачиваете виджет, и мы регистрируем вас в системе WhatsApp (для этого потребуется отсканировать qr-код);</li>
-                                       <li>Мы даем вам доступ к виджету.</li></ul><br><span style=\"font-weight:bold;\">Как это работает?</span>
+                                       <br><span style=\"font-weight:bold;\">Как это работает?</span>
                                        <br>Мы подготовили скринкаст, который покажет вам функционал виджета и его простоту использования.<br>
                                        <br><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lkBIHZKUUP0?rel=0\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>
                                        <br><br>Мы предоставляем вам 1 день теста, чтобы вы могли попробовать наш продукт в своем бизнесе.<br>
@@ -1095,17 +982,19 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 var content;
                 var conect_test_button =
                     `<br>
-                                     Вы можете подключить тестовый период и попробывать весь его функцмонал.
-                                     <br><br><span style=\"font-weight:bold;\">Обратите внимание! </span><br> 
-                                     Тестовый виджет подключается только один раз на один день.<br>`
+                                     Вы можете подключить тестовый период и попробывать его функцмонал.
+                                     <br><br><span style=\"font-weight:bold;\">Обратите внимание! </span><br>
+                                     Тестовый виджет подключается только один раз на один день.<br><br>
+                                     В тестовом виджете присудствуют ограничения:<br>1) Вы можете отправить всего 20 сообщений.<br>
+                                     2) Сообщения можно отправлять и получать только с тех трех номеров, которые вы указываете ниже.
+                                     <br><br>
+                                     <button class="test-button prostowapp" id = "test_button"><div>
+                                     Подключить тестовый период
+                                     </div></button>`
                 var conect_info =
-                    `<br>Для подключения тестового периода необходимо заполнить все поля ниже
-                                     а так же поставить согласие на обработку данных.
-                                     <br><br>
-                                      <button class="server-success prostowapp"><div>
-                                      Подключить тестовый период
-                                      </div></button>
-                                     <br><br>
+                                    `<br><br>Для подключения тестового периода необходимо заполнить все поля ниже
+                                    а так же поставить согласие на обработку данных.
+                                    <br><br>
                                      Ваш телефон *:
                                      <input type="tel" size="30" id="client_number" class="client-fields prostowapp">
                                      <br><br>
@@ -1114,9 +1003,19 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                      <br><br>
                                      Ваш API-ключ *:
                                      <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
-                                     <br><br>`
+                                     <br><br>
+                                     Ваш admin-email *:
+                                     <input type="text" size="30" id="admin_email" value="${user_email}" class="client-fields prostowapp">`
+                var client_numbers = `<br><br>
+                                     Номера на которые вы будете отправлять сообщения <br> (только для тестового периода) *:<br><br>
+                                     +<input type="text" size="30" id="client_number1" placeholder="79993334466" class="client-fields prostowapp">
+                                     <br><div id="number_bug1"/><br>
+                                     +<input type="text" size="30" id="client_number2" placeholder="79213544532" class="client-fields prostowapp">
+                                     <br><div id="number_bug2"/><br>
+                                     +<input type="text" size="30" id="client_number3" placeholder="79111325984" class="client-fields prostowapp">
+                                     <br><div id="number_bug3"/><br>`
                 var conect_info_pay =
-                    `<span style=\"font-weight:bold;\">Для подключения виджета на более долгий срок необходимо:</span > 
+                    `<div id="div_test"></div><span style="font-weight:bold;">Для подключения виджета на более долгий срок необходимо:</span > 
                                      <br><br>1) оплатить виджет на нужный срок`
                 var conect_info_pay2 =
                     `<br>2) заполнить все поля выше и поставить согласие на обработку данных.
@@ -1125,6 +1024,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     user_subdomain: user_subdomain,
                     tool: 'client'
                 };
+                
                 self.crm_post(
                     server_url,
                     formData,
@@ -1151,14 +1051,13 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                 if (acceptCheckBox.checked) {
                                     var c_name = $('#client_name.prostowapp').val();
                                     var c_num = $('#client_number.prostowapp').val();
-                                    let adminEmail = $('[name=adminemailprostowapp]').val();
-                                    let adminAPI = $('[name=apikeyprostowapp]').val();
+                                    // let adminEmail = $('[name=adminemailprostowapp]').val();
+                                    // let adminAPI = $('[name=apikeyprostowapp]').val();
 
                                     var formData = {
                                         client_name: c_name,
                                         client_number: c_num,
-                                        admin_email: adminEmail,
-                                        admin_api: adminAPI,
+                                        admin_email: user_email,
                                         client_subdomain: user_subdomain,
                                         tool: 'request'
                                     };
@@ -1166,13 +1065,10 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                     self.crm_post(
                                         server_url,
                                         formData,
-                                        function (req_num) {
-                                            debugger;
-                                            if (req_num) {
-                                                var req_succ = '<br><div class="server-success prostowapp"><div>Успешная отправка. Номер заявки: ' +
-                                                    req_num + '.<br>' +
-                                                    'С Вами свяжется оператор.</div></div>' +
-                                                    formPaymentNew;
+                                        function (res) {
+                                            if (res.success) {
+                                                var req_succ = `<br><div class="server-success prostowapp"><div>Успешная отправка. .<br>
+                                                    С Вами свяжется оператор.</div></div>`;
 
                                                 infoTabBlock.innerHTML = req_succ;
                                             }
@@ -1192,7 +1088,26 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             }
                         }
                         function infoSettings() {
-                            infoTabBlock.innerHTML = "<iframe class='settingsIframe' src='https://prosto.group/whatsapp/settings/?domain=pasportprosto&api=2e2ba243b5616e9f0dd869be23d9868365c68462'></iframe>";
+                            var formData = {
+                                subdomain: user_subdomain,
+                                tool: 'infosetting'
+                            };
+
+                            self.crm_post(
+                                server_url,
+                                formData,
+                                function (req_num) {
+                                    if (req_num) {
+                                        var str = `<br><br><br><iframe class='settingsIframe' 
+                                                    src='https://prosto.group/whatsapp/settings/?domain=`  
+                                                    + user_subdomain + `&api=` + req_num +`'></iframe>`;
+                                        infoTabBlock.innerHTML = str;
+                                    }
+                                    else {
+                                    }
+                                },'json',
+                                function () { }
+                            );
                         }
 
                         function infoPay() {
@@ -1202,15 +1117,16 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                 month: 'long',
                                 year: 'numeric'
                             });
-
+                            var timestatus;
+                            if (userState == 'test') timestatus = 'тестового периода';
+                            else timestatus ='оплаты';
                             var findate =
-                                `<br><br>
-                                         <div class="server-success prostowapp"><div>
-                                         Срок окончания оплаты: ${localeDate}
+                                `<div class="server-success prostowapp"><div>
+                                         Срок окончания ${timestatus}: ${localeDate}
                                          </div></div>
                                          <br>Продлите виджет прямо сейчас!<br>`;
 
-                            if (false) { //finalDate > currentDate) {
+                            if (finalDate > currentDate) {
                                 infoTabBlock.innerHTML = findate + formPaymentNew("ОПЛАТИТЬ");
                             }
                             else {
@@ -1221,47 +1137,118 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                             switch (userState) {
                                 case 'start':
-                                    content = conect_test_button + conect_info_pay;
+                                    content = conect_test_button + client_numbers + conect_info_pay;
                                     break;
-                                case 'end':
+                                case 'delete':
                                 case 'test':
                                     content = conect_info_pay;
                                     break;
                                 default:
-                                    content = conect_test_button + conect_info + conect_info_pay + conect_info_pay2;
+                                    content = conect_test_button + conect_info + client_numbers + conect_info_pay + conect_info_pay2;
                                     break;
                             }
 
                             infoTabBlock.innerHTML = content;
                             infoPay();
 
-                            if (userState == false) {
-                                document.querySelector("#paymentButton").addEventListener('click', addNewUser)
+                            var tbutton = document.querySelector("#test_button");
+                            if (tbutton) {
+                                tbutton.addEventListener('click', testUser);
+                            }
 
-                                function addNewUser() {
-                                    const client_number = document.querySelector("#client_number").value;
-                                    const client_name = document.querySelector("#client_name").value;
-                                    const apikey_subdomen = document.querySelector("#apikey_subdomen").value;
+                            function testUser(){
+                                const client_number = document.querySelector("#client_number");
+                                const client_name = document.querySelector("#client_name");
+                                const apikey_subdomen = document.querySelector("#apikey_subdomen");
+                                const admin_email = document.querySelector("#admin_email.prostowapp");
+                                const client_number1 = document.querySelector("#client_number1.prostowapp");
+                                const client_number2 = document.querySelector("#client_number2.prostowapp");
+                                const client_number3 = document.querySelector("#client_number3.prostowapp");
 
-                                    var formData = {
-                                        client_number: client_number,
-                                        client_name: client_name,
-                                        apikey_subdomen: apikey_subdomen,
-                                        client_subdomain: user_subdomain
-                                    };
-
-                                    self.crm_post(
-                                        'https://prosto.group/dashboard/whatsapp_widget_lis/addNewUser.php',
-                                        formData,
-                                        function (res) {
-                                            debugger
-                                        },
-                                        'json',
-                                        function () {
-                                            console.error('Ошибка');
-                                        }
-                                    );
+                                var formData = {
+                                    client_subdomain: user_subdomain,
+                                    client_number1: client_number1.value,
+                                    client_number2: client_number2.value,
+                                    client_number3: client_number3.value
+                                };
+                                
+                                if (client_number, client_name, apikey_subdomen) {
+                                    formData = Object.assign(formData, {
+                                        client_number: client_number.value,
+                                        client_name: client_name.value,
+                                        admin_email: admin_email.value,
+                                        apikey_subdomen: apikey_subdomen.value
+                                    })
                                 }
+
+                                self.crm_post(
+                                    'https://prosto.group/dashboard/whatsapp_widget_lis/addNewTestUser.php',
+                                    formData,
+                                    function (res) {
+                                        if (res.success) {
+                                            userState = 'test';
+                                            infoConnection();
+                                            $('#div_test').html(`<br><div class="server-success prostowapp"><div>Подключен тестовый период</div></div><br>`);
+                                        } else {
+                                            debugger;
+                                            if (!(res.message == 'Ошибка! Возможно Вы ввели не все данные')) {
+                                                userState = 'start';
+                                                infoConnection();
+                                            }
+                                                var str =`<div class="server-error prostowapp"><div>${res.message}</div></div>`;
+                                                $('#div_test').html(str);
+                                        }
+                                    },
+                                    'json',
+                                    function () {
+                                        $('#div_test').html(`<div class="server-error prostowapp"><div>Ошибка!</div></div>`);
+                                        console.error('Ошибка');
+                                    }
+                                );   
+                            }
+                           
+                            document.querySelector("#paymentButton").addEventListener('click', addNewUser);
+
+                            function addNewUser() {
+                                if (userState == false) {
+                                    const client_number = document.querySelector("#client_number.prostowapp").value;
+                                    const client_name = document.querySelector("#client_name.prostowapp").value;
+                                    const apikey_subdomen = document.querySelector("#apikey_subdomen.prostowapp").value;
+                                    const admin_email = document.querySelector("#admin_email.prostowapp").value;
+
+                                    if (client_number && client_name && apikey_subdomen && admin_email) {
+
+                                        var formData = {
+                                            client_number: client_number,
+                                            client_name: client_name,
+                                            apikey_subdomen: apikey_subdomen,
+                                            admin_email,
+                                            client_subdomain: user_subdomain
+                                        };
+
+                                        self.crm_post(
+                                            'https://prosto.group/dashboard/whatsapp_widget_lis/addNewUser.php',
+                                            formData,
+                                            function (res) {
+                                                debugger
+                                                // $(".widget_info_block").html('<div class="server-success prostowapp"><div>Виджен заработает в течении суток после оплаты</div></div>'); 
+                                            },
+                                            'json',
+                                            function () {
+                                                console.error('Ошибка');
+                                            }
+                                        );
+                                    } else {
+                                        event.stopPropagation();
+                                        event.preventDefault();
+                                        var str =`<div class="server-error prostowapp"><div>
+                                                   Ошибка! Возможно Вы ввели не все данные</div></div>`;
+                                         $('#div_test').html(str);
+                                    }
+                                }
+                                setTimeout(() => {
+                                    $(".widget_info_block").html('<div class="server-success prostowapp"><div>Виджен заработает в течении суток после оплаты</div></div>');                                    
+                                }, 300)
                             }
                         }
 
@@ -1269,23 +1256,76 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                         infoBlock.classList.add("widget_info_block");
                         $(".widget-settings__desc-space")[0].appendChild(infoBlock);
 
-                        infoBlock.innerHTML = inputConst;
-                        var menuBlock = document.createElement("div");
-                        menuBlock.classList.add("widget_menu_block");
-                        $(".widget_info_block")[0].appendChild(menuBlock);
+                        var htmlPat = `
+                        <div class="tabs">
+                            <li>
+                                <input type="radio" name="tabs" id="tab1" checked class="tabs-input"/>
+                                <label for="tab1"  
+                                       tabindex="0" class="tabs-label">Description</label>
+                                <div id="tab-content1" 
+                                     class="tab-content" >
+                                  <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+                                </div>
+                            </li>
+                          
+                            <li>
+                                <input type="radio" name="tabs" id="tab2" class="tabs-input"/>
+                                <label for="tab2"
+                                       tabindex="0" class="tabs-label">Specification</label>
+                                <div id="tab-content2" 
+                                     class="tab-content">
+                                  <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla?</p>
+                                </div>
+                            </li>
+                        </div>`
 
-                        var infoTabBlock = document.createElement("div");
-                        infoTabBlock.classList.add("widget_info_tab_block");
-                        $(".widget_info_block")[0].appendChild(infoTabBlock);
+                        var htmlPat2 = `<div class="tabs">
+  
+                        <input type="radio" id="tab1" name="tab-control" checked>
+                        <input type="radio" id="tab2" name="tab-control">
+                        <ul>
+                          <li title="Features"><label for="tab1" role="button"><span>Features</span></label></li>
+                          <li title="Delivery Contents"><label for="tab2" role="button"><span>Delivery Contents</span></label></li>
+                         </ul>
+                        
+                        <div class="slider"><div class="indicator"></div></div>
+                        <div class="content">
+                          <section id = "tab-content2">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea dolorem sequi, quo tempore in eum obcaecati atque quibusdam officiis est dolorum minima deleniti ratione molestias numquam. Voluptas voluptates quibusdam cum?</section>
+                              <section>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem quas adipisci a accusantium eius ut voluptatibus ad impedit nulla, ipsa qui. Quasi temporibus eos commodi aliquid impedit amet, similique nulla.</section>
+                        </div>
+                      </div>`
 
-                        var descriptionTab = document.createElement("button");
-                        descriptionTab.classList.add("widget_tab_block");
-                        descriptionTab.innerHTML = "Полное описание";
-                        descriptionTab.id = 'descriptionTabId'
-                        $(".widget_menu_block")[0].appendChild(descriptionTab);
+                    
 
-                        var block1 = document.querySelector('#descriptionTabId');
-                        block1.addEventListener('click', infoDescription);
+                    
+
+                        // var menuBlock = document.createElement("div");
+                        // menuBlock.classList.add("widget_menu_block");
+                        // $(".widget_info_block")[0].appendChild(menuBlock);
+
+                        infoBlock.innerHTML = htmlPat2;
+                        var infoTabBlock = document.querySelector('#tab-content2');
+                        
+                        // var infoTabBlock = document.createElement("div");
+                        // $("#tab-content2").appendChild(infoTabBlock);
+
+                        var block2 = document.querySelector('#tab2');
+                        block2.addEventListener('click', infoConnection);
+
+
+                        // infoTabBlock.classList.add("widget_info_tab_block");
+                        // $(".widget_info_block")[0].appendChild(infoTabBlock);
+
+                        // var descriptionTab = document.createElement("button");
+                        // descriptionTab.classList.add("widget_tab_block");
+                        // descriptionTab.innerHTML = "Полное описание";
+                        // descriptionTab.id = 'descriptionTabId'
+                        // $(".widget_menu_block")[0].appendChild(descriptionTab);
+
+                        // var block1 = document.querySelector('#descriptionTabId');
+                        // block1.addEventListener('click', infoDescription);
 
                         var settingsTab = descriptionTab.cloneNode(true);
                         settingsTab.innerText = 'Настройки';
@@ -1301,25 +1341,27 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                         ///////////////////////////////////////////////////////
                         //////////////////////////////////////////////////////
-                        switch (userState) {
-                            case 'used':
-                                $(".widget_menu_block")[0].appendChild(settingsTab);
-                                $(".widget_menu_block")[0].appendChild(paymentTab);
+                        // switch (userState) {
+                        //     case 'used':
+                        //         $(".widget_menu_block")[0].appendChild(settingsTab);
+                        //         $(".widget_menu_block")[0].appendChild(paymentTab);
 
 
-                                var block2 = document.querySelector('#settingsTabId');
-                                block2.addEventListener('click', infoSettings);
+                        //         var block2 = document.querySelector('#settingsTabId');
+                        //         block2.addEventListener('click', infoSettings);
 
-                                var block3 = document.querySelector('#paymentTabId');
-                                block3.addEventListener('click', infoPay);
-                                break;
+                        //         var block3 = document.querySelector('#paymentTabId');
+                        //         block3.addEventListener('click', infoPay);
+                        //         break;
 
-                            default:
-                                $(".widget_menu_block")[0].appendChild(connectionTab);
-                                var block2 = document.querySelector('#connectionTabId');
-                                block2.addEventListener('click', infoConnection);
-                                break;
-                        }
+                        //     default:
+                        //         $(".widget_menu_block")[0].appendChild(connectionTab);
+                        //         var block2 = document.querySelector('#connectionTabId');
+                        //         block2.addEventListener('click', infoConnection);
+                        //         break;
+                        // }
+                        // infoConnection();
+
 
                         ////////////////////////////////////////////////////////////
                         ///////////////////////////////////////////////////////////
@@ -1332,31 +1374,31 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 return true;
             },
             onSave: function () {
-                if ($('#accept.prostowapp:checked').length == 1) {
-                    let adminEmail = $('[name=adminemailprostowapp]').val();
-                    let adminAPI = $('[name=apikeyprostowapp]').val();
+                // if ($('#accept.prostowapp:checked').length == 1) {
+                //     let adminEmail = $('[name=adminemailprostowapp]').val();
+                //     let adminAPI = $('[name=apikeyprostowapp]').val();
 
-                    var formData = {
-                        admin_email: adminEmail,
-                        admin_api: adminAPI,
-                        subdomain: user_subdomain,
-                        tool: 'settings_save'
-                    };
+                //     var formData = {
+                //         admin_email: adminEmail,
+                //         admin_api: adminAPI,
+                //         subdomain: user_subdomain,
+                //         tool: 'settings_save'
+                //     };
 
-                    self.crm_post(
-                        server_url,
-                        formData,
-                        function () {
-                        },
-                        'json',
-                        function () { }
-                    );
-                }
-                else {
-                    var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
-                    $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
-                    $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
-                }
+                //     self.crm_post(
+                //         server_url,
+                //         formData,
+                //         function () {
+                //         },
+                //         'json',
+                //         function () { }
+                //     );
+                // }
+                // else {
+                //     var req_unsucc = '<div class="server-no-contacts prostowapp"><div>Необходимо принять согласие на обработку персональных данных.</div></div><br>';
+                //     $('#info_container.prostowapp div.server-no-contacts.prostowapp').remove();
+                //     $('#info_container.prostowapp .contacts.prostowapp').prepend(req_unsucc);
+                // }
 
                 return true;
             }
@@ -1366,4 +1408,3 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
     return CustomWidget;
 });
-
