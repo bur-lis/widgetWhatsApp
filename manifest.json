@@ -11,7 +11,10 @@
         "locale": [
             "ru"
         ],
-        "installation": true
+        "installation": true,
+        "support": {
+            "email": "widget@prosto.group"
+        }
     },
     "locations": [
         "lcard-1",
@@ -25,16 +28,5 @@
                 "type": "text",
                 "required": true
               }
-    },
-    "tour" : {
-        "is_tour" : true ,
-        "tour_images" : {
-          "ru": [
-            "/images/tour_1_ru.png" ,
-            "/images/tour_2_ru.png" ,
-            "/images/tour_3_ru.png"
-          ]
-        },
-        "tour_description" : "Описание: Данный виджет предоставляет возможность вашим клиентам в What’s App отправлять сообщения прямо из карточки сделки. Для этого вам необходимо всего лишь выбрать нужное сообщение из многофункционального шаблона, который вы составите заранее, и номер для отправки. "
     }
 }
