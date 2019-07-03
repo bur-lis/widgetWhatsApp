@@ -5,7 +5,7 @@
         "short_description": "widget.short_description",
         "code": "test_lis",
         "secret_key": "3f43408d7f68b7cdb6639ff94c28035aafcc3f6b5dbfbd17d754f01384465ced",
-        "version": "2.0.0",
+        "version": "2.0.1",
         "interface_version": 2,
         "init_once": false,
         "locale": [
