@@ -1231,7 +1231,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                             formData,
                                             function (res) {
                                                 debugger
-                                                // $(".widget_info_block").html('<div class="server-success prostowapp"><div>Виджен заработает в течении суток после оплаты</div></div>'); 
                                             },
                                             'json',
                                             function () {
