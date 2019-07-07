@@ -1020,7 +1020,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     server_url,
                     formData,
                     function (data) {
-                        var currentDate = Date.parse(new Date());
                         var finalDate = Date.parse(data.date);
                         var userState = data.state;
                         var inputConst = `
