@@ -37,7 +37,6 @@ div[class*="server-"].prostowapp {
 
 .btn-center.prostowapp {
     width: 30%;
-    /* height: 30px; */
     margin: auto;
     text-align: -webkit-center;
     text-align: -moz-center;
@@ -101,6 +100,11 @@ div[class*="server-"].prostowapp {
     border: 1px solid #063;
     width: 100%;
 }
+
+.server-success--with-padding.prostowapp {
+    margin: 15px 0 10px;
+}
+
 .server-success.prostowapp div {
     color: #063;
     font-weight: bold;
@@ -177,24 +181,6 @@ div[class*="server-"].prostowapp {
 }
 
 .back.prostowapp:hover {
-    cursor: pointer;
-}
-
-.back2.prostowapp {
-    background-image: linear-gradient(#0033CC, #3366FF 40%, #6699FF);
-    background-image: -webkit-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
-    background-image: -moz-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
-    background-image: -o-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
-    background-image: -ms-linear-gradient(#0033CC, #3366FF 40%, #6699FF);
-    color: #fff;
-    font-weight: bold;
-    border: 0px solid #AAA;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-}
-
-.back2.prostowapp:hover {
     cursor: pointer;
 }
 
@@ -314,9 +300,8 @@ textarea#text.prostowapp {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
 }
-#edit-submit.prostowapp, #add-submit.prostowapp, #add-block.prostowapp, .add-position.prostowapp, #del-yes.prostowapp, #del-no.prostowapp, .back.prostowapp, .back2.prostowapp  {
+#edit-submit.prostowapp, #add-submit.prostowapp, #add-block.prostowapp, .add-position.prostowapp, #del-yes.prostowapp, #del-no.prostowapp, .back.prostowapp {
    padding: 0px;
-   /* margin: 10px; */
 }
 
 img.queue.prostowapp {
@@ -465,7 +450,6 @@ img.queue.prostowapp {
 
 .test-button.prostowapp {
     background-color: #c1ffc1;
-    /* border: 1px solid #063; */
     width: 80%;
     cursor: pointer;
     margin: 0px 10%;
