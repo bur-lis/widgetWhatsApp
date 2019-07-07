@@ -64,9 +64,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         };
 
         this.sendLcardInfo = function (length) {
-            var succ = function (item) {
-                return item;
-            };
             var emptyI = function (item) {
                 return item === "";
             };
@@ -409,12 +406,8 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 server_url,
                 formData,
                 function (data) {
-                    var currentDate = Date.parse(new Date());
-                    var finalDate = Date.parse(data.date);
                     var state = data.state;
                     if (state === 'used' || state === 'test') {
-                        // self.serverData();
-
                         w_code = self.get_settings().widget_code;
                         self.render_template({
                             caption: {
@@ -738,8 +731,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             var headersArr = $('.t-menu-style-head.prostowapp');
 
             var addButton = '<input type="button" style = "margin: 20px 0px 0px 0px;" value="ДОБАВИТЬ БЛОК" class="add-tool back prostowapp" id="add-block">';
-            var settingsButton = '<input type="button" value="НАСТРОЙКИ" class="back2 prostowapp" id="widget-settings"><br><br>';
-
+            
             $('#t-list.prostowapp').prepend(addButton);
 
             var qIcon;
@@ -1009,9 +1001,9 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                      Номера на которые вы будете отправлять сообщения <br> (только для тестового периода) *:<br><br>
                                      +<input type="text" size="30" id="client_number1" placeholder="79993334466" class="client-fields prostowapp">
                                      <br><div id="number_bug1"/><br>
-                                     +<input type="text" size="30" id="client_number2" placeholder="79213544532" class="client-fields prostowapp">
+                                     +<input type="text" size="30" id="client_number2" placeholder="375334446688 class="client-fields prostowapp">
                                      <br><div id="number_bug2"/><br>
-                                     +<input type="text" size="30" id="client_number3" placeholder="79111325984" class="client-fields prostowapp">
+                                     +<input type="text" size="30" id="client_number3" placeholder="380442229966" class="client-fields prostowapp">
                                      <br><div id="number_bug3"/><br>`
                 var conect_info_pay =
                     `<div id="div_test"></div><span style="font-weight:bold;">Для подключения виджета на более долгий срок необходимо:</span > 
@@ -1028,7 +1020,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     server_url,
                     formData,
                     function (data) {
-
                         var currentDate = Date.parse(new Date());
                         var finalDate = Date.parse(data.date);
                         var userState = data.state;
@@ -1115,24 +1106,9 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                         function infoPay() {
                             setActiveTab.call(this);
 
-                            var localeDate = new Date(data.date).toLocaleString("ru", {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric'
-                            });
-                            var timestatus;
-                            if (userState == 'test') timestatus = 'тестового периода';
-                            else timestatus = 'оплаты';
-                            var findate =
-                                `<div class="server-success prostowapp"><div>
-                                         Срок окончания ${timestatus}: ${localeDate}
-                                         </div></div>
-                                         <br>Продлите виджет прямо сейчас!<br>`;
-
-                            if (finalDate > currentDate) {
-                                infoTabBlock.innerHTML = findate + formPaymentNew("ОПЛАТИТЬ");
-                            }
-                            else {
+                            if (userState === 'test' || userState === 'used') {
+                                infoTabBlock.innerHTML = `Продлите виджет прямо сейчас!` + formPaymentNew("ОПЛАТИТЬ");
+                            } else {
                                 infoTabBlock.innerHTML += formPaymentNew("ПОДКЛЮЧИТЬ");
                             }
                         }
@@ -1154,7 +1130,8 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             infoTabBlock.innerHTML = content;
                             infoPay.call(this);
 
-                            var tbutton = document.querySelector("#test_button");
+                            const acceptCheckbox = document.querySelector('#accept.prostowapp'); 
+                            const tbutton = document.querySelector("#test_button");
                             if (tbutton) {
                                 tbutton.addEventListener('click', testUser);
                             }
@@ -1184,19 +1161,21 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                     })
                                 }
 
-                                if (inputConst.checked) {
+                                if (acceptCheckbox.checked) {
                                     self.crm_post(
                                         'https://prosto.group/dashboard/whatsapp_widget_lis/addNewTestUser.php',
                                         formData,
                                         function (res) {
+                                            var data = res.data;
+                                            finalDate = Date.parse(data.date);
+                                            userState = data.state;
+
                                             if (res.success) {
-                                                userState = 'test';
-                                                infoConnection();
-                                                $('#div_test').html(`<br><div class="server-success prostowapp"><div>Подключен тестовый период</div></div><br>`);
+                                                showDateInfo();
+                                                infoConnection.call(connectionTab);
                                             } else {
-                                                if (!(res.message == 'Ошибка! Возможно Вы ввели не все данные')) {
-                                                    userState = 'start';
-                                                    infoConnection();
+                                                if (res.message != 'Ошибка! Возможно Вы ввели не все данные') {
+                                                    infoConnection.call(connectionTab);
                                                 }
                                                 var str = `<div class="server-error prostowapp"><div>${res.message}</div></div>`;
                                                 $('#div_test').html(str);
@@ -1207,10 +1186,8 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                             $('#div_test').html(`<div class="server-error prostowapp"><div>Ошибка!</div></div>`);
                                         }
                                     );
-                                }
-                                else {
-                                    var str = `<div class="server-error prostowapp"><div>
-                                                       Поставьте согласие на обработку данных!</div></div>`;
+                                } else {
+                                    var str = `<div class="server-error prostowapp"><div>Поставьте согласие на обработку данных!</div></div>`;
                                     $('#div_test').html(str);
                                 }
                             }
@@ -1224,7 +1201,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                     const apikey_subdomen = document.querySelector("#apikey_subdomen.prostowapp").value;
                                     const admin_email = document.querySelector("#admin_email.prostowapp").value;
 
-                                    if (inputConst.checked) {
+                                    if (acceptCheckbox.checked) {
                                         if (client_number && client_name && apikey_subdomen && admin_email) {
 
                                             var formData = {
@@ -1272,6 +1249,28 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             this.classList.add('menu__tab--active');
                             activeTab = this;
                         }
+
+                        function showDateInfo() {
+                            if (userState === 'test' || userState === 'used') {
+                                var localeDate = new Date(finalDate).toLocaleString("ru", {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                });
+                                var timestatus = userState === 'test' ? 'тестового' : 'оплаченного';
+                                var findate =
+                                    `<div class="server-success server-success--with-padding prostowapp">
+                                        <div>
+                                             Окончание ${timestatus} периода: ${localeDate} в 23:55
+                                        </div>
+                                    </div>`;
+                                    
+                                var settingsBlock = $('.widget_settings_block');
+                                settingsBlock.append(findate);
+                            }
+                        }
+
+                        showDateInfo()
 
                         var infoBlock = document.createElement("div");
                         infoBlock.classList.add("widget_info_block");
@@ -1342,6 +1341,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                 return true;
             },
+            
             onSave: function () {
                 return true;
             }
