@@ -893,6 +893,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             settings: function () {
                 w_code = self.get_settings().widget_code;
 
+                document.querySelector('.widget_settings_block__input_field input').value = 'empty';
                 $('.widget_settings_block__fields').hide();
 
                 var switcher = $('.modal-body').find('.widget_settings_block__switch');
@@ -1001,7 +1002,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                      Номера на которые вы будете отправлять сообщения <br> (только для тестового периода) *:<br><br>
                                      +<input type="text" size="30" id="client_number1" placeholder="79993334466" class="client-fields prostowapp">
                                      <br><div id="number_bug1"/><br>
-                                     +<input type="text" size="30" id="client_number2" placeholder="375334446688 class="client-fields prostowapp">
+                                     +<input type="text" size="30" id="client_number2" placeholder="375334446688" class="client-fields prostowapp">
                                      <br><div id="number_bug2"/><br>
                                      +<input type="text" size="30" id="client_number3" placeholder="380442229966" class="client-fields prostowapp">
                                      <br><div id="number_bug3"/><br>`
