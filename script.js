@@ -7,9 +7,11 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         var user_subdomain = AMOCRM.widgets.system.subdomain;
         var files;
         var moneybag = '41001137689349';
-        var contactsHtml = '<div class="prostowapp contacts">Пишите нам на почту: widget@prosto.group или в What\'sApp: +7 (900) 654-63-01<br>';
+        var contactsHtml = '<div class="prostowapp support">Пишите нам на почту: widget@prosto.group</div>';
         var blockInfo = {};
-
+        var preloderSVG = '<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="64px" height="64px" viewBox="0 0 128 128" xml:space="preserve"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF" /><g><circle cx="16" cy="64" r="16" fill="#000000" fill-opacity="1"/><circle cx="16" cy="64" r="16" fill="#555555" fill-opacity="0.67" transform="rotate(45,64,64)"/><circle cx="16" cy="64" r="16" fill="#949494" fill-opacity="0.42" transform="rotate(90,64,64)"/><circle cx="16" cy="64" r="16" fill="#cccccc" fill-opacity="0.2" transform="rotate(135,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(180,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(225,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(270,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(315,64,64)"/><animateTransform attributeName="transform" type="rotate" values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete" dur="640ms" repeatCount="indefinite"></animateTransform></g></svg>';
+        var infoSVG = `<svg viewBox="0 0 32 32" class="message-title__info-icon" width="1.2em" height="1.2em"><path style="fill:currentColor;fill-opacity:1;stroke:none" d="M 16 4 A 12 12 0 0 0 4 16 A 12 12 0 0 0 16 28 A 12 12 0 0 0 28 16 A 12 12 0 0 0 16 4 z M 16 5 A 11 11 0 0 1 27 16 A 11 11 0 0 1 16 27 A 11 11 0 0 1 5 16 A 11 11 0 0 1 16 5 z M 15 9 L 15 11 L 17 11 L 17 9 L 15 9 z M 15 13 L 15 23 L 17 23 L 17 13 L 15 13 z " id="path55" class="ColorScheme-Text"></path></svg>`
+            
         var positionsInfo = {};
 
         this.getLcardInfo = function () {
@@ -63,29 +65,16 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             }
         };
 
-        this.sendLcardInfo = function (length) {
-            var emptyI = function (item) {
-                return item === "";
-            };
-            var notemptyI = function (item) {
-                return item !== "";
-            };
+        this.sendLcardInfo = function () {
 
-            var receivers = [],
-                message;
+            var receivers = document.querySelectorAll('.contacts.prostowapp .contact__checkbox:checked ~ .contact__select'),
+                message = $('#wa_message.prostowapp').val(),
+                preloder = $('#already').html(`<div style = "margin: 0px 150px;">${preloderSVG}</div>`);
 
-            for (var i = 0; i < length; i++) {
-                receivers[i] = $('select.prostowapp.selected-contact' + i + ' :selected').text().replace(/\D/g, '');
-            }
-
-            message = $('#wa_message.prostowapp').val();
-            var preloder = $('#already').html('<div style = "margin: 0px 150px;"><img  src="' + self.params.path + '/images/preloader.gif"></div>');
-
-            if (!(receivers.every(emptyI))) {
-
+            if (receivers.length) {
                 preloder.show();
                 $('#already-send.prostowapp').hide();
-                receivers = receivers.filter(notemptyI);
+                receivers = Array.prototype.map.call(receivers, x => x.value);
 
                 self.crm_post(
                     server_url,
@@ -139,7 +128,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 contentType: false,
                 dataType: 'json',
                 success: function (data) {
-                    var preloder = $('#already').html('<div style = "margin: 0px 150px;"><img  src="' + self.params.path + '/images/preloader.gif"></div>');
+                    var preloder = $('#already').html(`<div style = "margin: 0px 150px;">${preloderSVG}</div>`);
                     if (data.every(succ)) {
                         $('#already-send.prostowapp').attr('class', 'server-success prostowapp');
                         var messageSucsess = $('#already-send.prostowapp').html('<div>Сообщение отправлено</div>');
@@ -165,54 +154,68 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             });
         };
 
-        this.contactsRender = function (contactsArr) {
+        this.contactsRender = function(_contactsArr) {
+            var contactsArr = _contactsArr.map(item => new Object({name: item[0], contacts: item.slice(1)}));
+            var active = true;
             $('#contacts-list-container.prostowapp').html('');
 
-            for (var i = 0; i < contactsArr.length; i++) {
-                var currentContact = contactsArr[i];
+            contactsArr.forEach((currentContact, i) => {
+                var len = currentContact.contacts.length;
+                if (!len) return;
 
-                $('#contacts-list-container.prostowapp').append('<span class="span-text-2 prostowapp">' +
-                    currentContact[0] +
-                    (currentContact[0] ? ':' : '') +
-                    '</span><br>');
+                var name = currentContact.name || 'Имя не указано';
 
-                $('#contacts-list-container.prostowapp').append('<select class="selected-contact' + i + ' style-select back prostowapp">' +
-                    '<option value="null" class="option-style prostowapp"></option>' +
-                    '</select><br>');
+                var options = currentContact.contacts.reduce((accum, item) => {
+                    return accum + `<option value="${item.replace(/\D/g, '')}" class="option-style prostowapp">
+                        ${item}
+                    </option>`
+                }, ``);
 
-                for (var a = 1; a < currentContact.length; a++) {
-                    $('select.prostowapp.selected-contact' + i).append('<option value="' + a + '" class="option-style prostowapp">' +
-                        currentContact[a] +
-                        '</option>');
-                }
-            }
+                var contactItemHTML = `
+                    <label class="contact__item" for="checkbox${i}">
+                        <input class="contact__checkbox" id="checkbox${i}" ${active ? 'checked': ''} type="checkbox">
+                        <span class="contact__name">${name}:</span>
+                        <select class="contact__select ${ len === 1? 'contact__select--only' : ''}">
+                            ${options}
+                        </select>
+                    </label>`;
+
+                active = false;
+                $('#contacts-list-container.prostowapp').append(contactItemHTML);
+            })
         };
 
         this.messageRender = function () {
             var divContainer, textMessage, btnSend, divAlready, divAlready1, btnHiddenFile, fileName;
             var len;
 
-            divContainer = '<div id="contacts-list-container" class="prostowapp"></div>';
-            textMessage = '<span class="span-text-2 prostowapp">Сообщение:</span>\
-            <div class="prostowapp" id="warning">!</div>\
-            <div class="prostowapp" id="warning-window">\
-            В системе WhatsApp запрещена массовая рассылка сообщений и файлов. Однако WhatsApp не дает четкой формулировки определению "массовая рассылка". При отправке откровенного спама вас быстро заблокируют, но крайне маловероятно, что ваш аккаунт получит бан при живой переписке.' +
-                '<div style="font-weight:bold;">В каких случаях вас могут забанить:</div>' +
-                '<ul>' +
-                '<li>1) пользователи могут пожаловаться на ваши сообщения как на спам, тогда WhatsApp вас забанит;</li>' +
-                '<li>2) при отправке большого количества файлов или при большой частоте их отправки, сервер WhatsApp может перегрузиться и не отправить сообщения или отправить их через несколько дней.</li>' +
-                '</ul>' +
-                '<div style="font-weight:bold;">Рекомендации:</div>' +
-                '<ul>' +
-                '<li>1) не отправляйте более 3-5 файлов на один номер телефона;</li>' +
-                '<li>2) если вы прикрепляете один файл, то можно отправить его нескольким номерам;</li>' +
-                '<li>3) не отправляйте одинаковые сообщения рекламного содержания на большое количество номеров.</li>' +
-                '</ul>' +
-                '<div>В случае бана системой What’s App мы не несем ответственности за это.</div>\
-                </div><br>\
-                <textarea id="wa_message" class="prostowapp" readonly></textarea>';
+            divContainer = `<div class="contcts">
+                <div class="contacts__title">Выберите номера получетелей:</div>
+                <div class="contacts__list prostowapp" id="contacts-list-container"></div>
+            </div>`;
+            textMessage = `
+            <div class="message-title">
+                <span class="span-text-2 prostowapp">Сообщение:</span>
+                ${infoSVG}
+                <div class="prostowapp message-title__info-text">
+                    В системе WhatsApp запрещена массовая рассылка сообщений и файлов. Однако WhatsApp не дает четкой формулировки определению "массовая рассылка". При отправке откровенного спама вас быстро заблокируют, но крайне маловероятно, что ваш аккаунт получит бан при живой перепис
+                    <div style="font-weight:bold;">В каких случаях вас могут забанить:</div>
+                    <ul>
+                    <li>1) пользователи могут пожаловаться на ваши сообщения как на спам, тогда WhatsApp вас забанит;</li>
+                    <li>2) при отправке большого количества файлов или при большой частоте их отправки, сервер WhatsApp может перегрузиться и не отправить сообщения или отправить их через несколько дней.</li>
+                    </ul>
+                    <div style="font-weight:bold;">Рекомендации:</div>
+                    <ul>
+                    <li>1) не отправляйте более 3-5 файлов на один номер телефона;</li>
+                    <li>2) если вы прикрепляете один файл, то можно отправить его нескольким номерам;</li>
+                    <li>3) не отправляйте одинаковые сообщения рекламного содержания на большое количество номеров.</li>
+                    </ul>
+                    <div>В случае бана системой What’s App мы не несем ответственности за это.</div>
+                </div>
+            </div>
+            <textarea id="wa_message" class="prostowapp" readonly></textarea>`;
             btnSend = '<br><br><div style="display: flex;"><button class="back prostowapp" id="send-message">ОТПРАВИТЬ СООБЩЕНИЕ</button>' +
-                '<div id="add-file" class="add-file-btn prostowapp" style="display:inline-block;" ><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div><br>';
+                '<div id="add-file" class="add-file-btn prostowapp"><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div><br>';
             btnHiddenFile = '<input hidden multiple type="file" id="file" class="prostowapp">';
             fileName = '<span id="filename" class="prostowapp"></span><br>';
             divAlready1 = '<div id="already"></div>';
@@ -224,12 +227,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             self.contactsRender(self.contacts);
             len = self.contacts.length;
             $('#already-send.prostowapp').hide();
-
-            $('#warning').hover(function () {
-                $('#warning-window').toggle(100);
-            }, function () {
-                $('#warning-window').toggle(100);
-            });
 
             $('.prostowapp#send-message').on('click', function () {
                 self.sendLcardInfo(len);
@@ -368,7 +365,10 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             var freeMessage = '<div id="free-message-container" class="prostowapp">' +
                 '<label><input type="checkbox" id="free-message-chbox" class="prostowapp"> Написать сообщение в свободной форме</label>' +
                 '</div>';
+            
             $('#t-list.prostowapp').append(freeMessage);
+            $('#t-list.prostowapp').append(contactsHtml);
+
 
             $('#free-message-chbox.prostowapp').on('change', function (e) {
                 var isChecked = $(e.target).prop('checked');
@@ -481,8 +481,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
                 $('#prostowapp-main-modal').trigger('modal:centrify');
             }
-
-            $('#prostowapp-main-modal').append("<br><br>" + contactsHtml);
         };
 
         this.editorTemplate = function (idBlock, idParent) {
@@ -730,7 +728,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         this.adminToolbar = function () {
             var headersArr = $('.t-menu-style-head.prostowapp');
 
-            var addButton = '<input type="button" style = "margin: 20px 0px 0px 0px;" value="ДОБАВИТЬ БЛОК" class="add-tool back prostowapp" id="add-block">';
+            var addButton = '<input type="button" value="ДОБАВИТЬ БЛОК" class="add-template add-tool back prostowapp" id="add-block">';
             
             $('#t-list.prostowapp').prepend(addButton);
 
@@ -944,10 +942,10 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     ${getPaymentSticker('6 месяцев', 13800)}
                     ${getPaymentSticker('12 месяцев', 26300)}
                     <br><br>Выберете способ оплаты:<br>
-                    <label><input type="radio" name="paymentType" value="PC"> Яндекс.Деньги</label><br>
-                    <label><input type="radio" name="paymentType" value="AC"> Банковская карта</label><br><br>
+                    <label><input type="radio" name="paymentType" class="way-pay prostowapp" value="PC"> Яндекс.Деньги</label><br>
+                    <label><input type="radio" name="paymentType" class="way-pay prostowapp" value="AC"> Банковская карта</label><br><br>
                     <div class="btn-center prostowapp"><input id="paymentButton" type="submit" class="back prostowapp" value="${name_pay_button}"></div><br>
-                    </form><br>` + contactsHtml;
+                    </form>` + contactsHtml;
                 }
 
                 var description = `<div>
@@ -971,7 +969,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                        </div><br>`+ formRequest + `<br>
                                        * What\'sApp имеет лимит по отправке сообщений в зависимости от их содержания,количества,
                                         количества контактов и частоты отправки. В случае бана системой What\'sApp
-                                        ответственности не несем.</div><br><br>` + contactsHtml;
+                                        ответственности не несем.</div>` + contactsHtml;
                 var content;
                 var conect_test_button =
                         `Вы можете подключить тестовый период и попробывать его функцмонал.
@@ -1109,7 +1107,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             if (userState === 'test' || userState === 'used') {
                                 infoTabBlock.innerHTML = `Продлите виджет прямо сейчас!` + formPaymentNew("ОПЛАТИТЬ");
                             } else {
-                                infoTabBlock.innerHTML += formPaymentNew("ПОДКЛЮЧИТЬ");
+                                infoTabBlock.innerHTML += formPaymentNew("ПОДКЛЮЧИТЬ ПОЛНУЮ ВЕРСИЮ");
                             }
                         }
 
@@ -1195,12 +1193,21 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                             document.querySelector("#paymentButton").addEventListener('click', addNewUser);
 
                             function addNewUser() {
-                                if (userState == false) {
+                                const tarif = $(".payment__input.prostowapp:checked").val();
+                                const way_pay = $(".way-pay.prostowapp:checked").val();
+                                    
+                                if (!tarif && !way_pay) {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    var str = `<div class="server-error prostowapp"><div>
+                                                Ошибка! Вы не выбрали тариф или способ оплаты</div></div>`;
+                                    $('#div_test').html(str);
+                                } else if (userState == false) {
                                     const client_number = document.querySelector("#client_number.prostowapp").value;
                                     const client_name = document.querySelector("#client_name.prostowapp").value;
                                     const apikey_subdomen = document.querySelector("#apikey_subdomen.prostowapp").value;
                                     const admin_email = document.querySelector("#admin_email.prostowapp").value;
-
+                                    
                                     if (acceptCheckbox.checked) {
                                         if (client_number && client_name && apikey_subdomen && admin_email) {
 
@@ -1235,8 +1242,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                                        Поставьте согласие на обработку данных!</div></div>`;
                                         $('#div_test').html(str);
                                     }
-                                }
-                                if (userState != "used") setTimeout(() => {
+                                } else if (userState != "used") setTimeout(() => {
                                     $(".widget_info_block").html(`<div class="server-success prostowapp"><div>
                                                                     Виджет заработает в течении суток после оплаты
                                                                     <br>Не забудьте подключить телефон к виджету!</div></div>`);

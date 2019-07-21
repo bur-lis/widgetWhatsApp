@@ -5,7 +5,7 @@ const path = require('path');
 
 const overridePath = 'C:/Users/dev/Documents/overrides';
 // const domen = 'pasportprosto'
-const domen = 'burlis'
+const domen = 'mois11'
 const dir = path.join(overridePath, domen + '.amocrm.ru', '/upl/test_lis/widget/');
 
 console.log(dir);
