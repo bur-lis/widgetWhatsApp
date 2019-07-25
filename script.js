@@ -7,7 +7,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         var user_subdomain = AMOCRM.widgets.system.subdomain;
         var files;
         var moneybag = '41001137689349';
-        var contactsHtml = '<div class="prostowapp support">Пишите нам на почту: widget@prosto.group</div>';
+        var contactsHtml = '<div class="prostowapp support">Пишите нам на почту: <a href="mailto:widget@prosto.group">widget@prosto.group</a></div>';
         var blockInfo = {};
         var preloderSVG = '<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="64px" height="64px" viewBox="0 0 128 128" xml:space="preserve"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF" /><g><circle cx="16" cy="64" r="16" fill="#000000" fill-opacity="1"/><circle cx="16" cy="64" r="16" fill="#555555" fill-opacity="0.67" transform="rotate(45,64,64)"/><circle cx="16" cy="64" r="16" fill="#949494" fill-opacity="0.42" transform="rotate(90,64,64)"/><circle cx="16" cy="64" r="16" fill="#cccccc" fill-opacity="0.2" transform="rotate(135,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(180,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(225,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(270,64,64)"/><circle cx="16" cy="64" r="16" fill="#e1e1e1" fill-opacity="0.12" transform="rotate(315,64,64)"/><animateTransform attributeName="transform" type="rotate" values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete" dur="640ms" repeatCount="indefinite"></animateTransform></g></svg>';
         var infoSVG = `<svg viewBox="0 0 32 32" class="message-title__info-icon" width="1.2em" height="1.2em"><path style="fill:currentColor;fill-opacity:1;stroke:none" d="M 16 4 A 12 12 0 0 0 4 16 A 12 12 0 0 0 16 28 A 12 12 0 0 0 28 16 A 12 12 0 0 0 16 4 z M 16 5 A 11 11 0 0 1 27 16 A 11 11 0 0 1 16 27 A 11 11 0 0 1 5 16 A 11 11 0 0 1 16 5 z M 15 9 L 15 11 L 17 11 L 17 9 L 15 9 z M 15 13 L 15 23 L 17 23 L 17 13 L 15 13 z " id="path55" class="ColorScheme-Text"></path></svg>`
@@ -67,7 +67,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
         this.sendLcardInfo = function () {
 
-            var receivers = document.querySelectorAll('.contacts.prostowapp .contact__checkbox:checked ~ .contact__select'),
+            var receivers = document.querySelectorAll('.contact.prostowapp .contact__checkbox:checked ~ .contact__select'),
                 message = $('#wa_message.prostowapp').val(),
                 preloder = $('#already').html(`<div style = "margin: 0px 150px;">${preloderSVG}</div>`);
 
@@ -134,6 +134,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                         var messageSucsess = $('#already-send.prostowapp').html('<div>Сообщение отправлено</div>');
                         preloder.hide();
                         messageSucsess.show();
+                        $('#filename.prostowapp').empty();
                         setTimeout(function () {
                             messageSucsess.hide();
                             self.msgGeneration();
@@ -172,7 +173,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 }, ``);
 
                 var contactItemHTML = `
-                    <label class="contact__item" for="checkbox${i}">
+                    <label class="contact prostowapp" for="checkbox${i}">
                         <input class="contact__checkbox" id="checkbox${i}" ${active ? 'checked': ''} type="checkbox">
                         <span class="contact__name">${name}:</span>
                         <select class="contact__select ${ len === 1? 'contact__select--only' : ''}">
@@ -189,7 +190,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             var divContainer, textMessage, btnSend, divAlready, divAlready1, btnHiddenFile, fileName;
             var len;
 
-            divContainer = `<div class="contcts">
+            divContainer = `<div class="contacts">
                 <div class="contacts__title">Выберите номера получетелей:</div>
                 <div class="contacts__list prostowapp" id="contacts-list-container"></div>
             </div>`;
@@ -214,12 +215,12 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 </div>
             </div>
             <textarea id="wa_message" class="prostowapp" readonly></textarea>`;
-            btnSend = '<br><br><div style="display: flex;"><button class="back prostowapp" id="send-message">ОТПРАВИТЬ СООБЩЕНИЕ</button>' +
-                '<div id="add-file" class="add-file-btn prostowapp"><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div><br>';
+            btnSend = '<div class="send-message prostowapp"><button class="back prostowapp" id="send-message">ОТПРАВИТЬ СООБЩЕНИЕ</button>' +
+                '<div id="add-file" class="add-file-btn prostowapp"><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div>';
             btnHiddenFile = '<input hidden multiple type="file" id="file" class="prostowapp">';
-            fileName = '<span id="filename" class="prostowapp"></span><br>';
-            divAlready1 = '<div id="already"></div>';
-            divAlready = '<div id="already-send" class="prostowapp"></div>';
+            fileName = '<span id="filename" class="prostowapp"></span>';
+            divAlready1 = '<div id="already" style="display: none; margin-top: 20px"></div>';
+            divAlready = '<div id="already-send" style="margin-top: 20px" class="prostowapp"></div>';
 
             $('#t-message.prostowapp').append(divContainer, textMessage, btnSend, btnHiddenFile, fileName, divAlready1, divAlready);
 
@@ -238,7 +239,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 files = this.files;
                 $('#filename.prostowapp').html('');
                 if (files[0]) {
-                    $('#filename.prostowapp').append('<br><br>Прикрепленные файлы:<br>');
+                    $('#filename.prostowapp').append('<br>Прикрепленные файлы:<br>');
                 }
                 else {
                     $('#filename.prostowapp').append('<br>');
@@ -415,7 +416,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                 html: ''
                             },
                             body: '',
-                            render: '<input type="button" class="back prostowapp" id="modal-template" value="НАПИСАТЬ СООБЩЕНИЕ"><br><br>'
+                            render: '<input type="button" class="back prostowapp" id="modal-template" value="НАПИСАТЬ СООБЩЕНИЕ">'
                         });
                         $('div[data-code=' + w_code + ']').css('background-color', '#fff');
                     }
@@ -995,14 +996,14 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                                      <input type="text" size="30" id="apikey_subdomen" class="client-fields prostowapp">
                                      <br><br>
                                      Ваш admin-email *:
-                                     <input type="text" size="30" id="admin_email" value="${user_email}" class="client-fields prostowapp">`
+                                     <input type="email" size="30" id="admin_email" value="${user_email}" class="client-fields prostowapp">`
                 var client_numbers = `<br><br>
                                      Номера на которые вы будете отправлять сообщения <br> (только для тестового периода) *:<br><br>
-                                     +<input type="text" size="30" id="client_number1" placeholder="79993334466" class="client-fields prostowapp">
+                                     +<input type="tel" size="30" id="client_number1" placeholder="79993334466" class="client-fields prostowapp">
                                      <br><div id="number_bug1"/><br>
-                                     +<input type="text" size="30" id="client_number2" placeholder="375334446688" class="client-fields prostowapp">
+                                     +<input type="tel" size="30" id="client_number2" placeholder="375334446688" class="client-fields prostowapp">
                                      <br><div id="number_bug2"/><br>
-                                     +<input type="text" size="30" id="client_number3" placeholder="380442229966" class="client-fields prostowapp">
+                                     +<input type="tel" size="30" id="client_number3" placeholder="380442229966" class="client-fields prostowapp">
                                      <br><div id="number_bug3"/><br>`
                 var conect_info_pay =
                     `<div id="div_test"></div><span style="font-weight:bold;">Для подключения виджета на более долгий срок необходимо:</span > 
