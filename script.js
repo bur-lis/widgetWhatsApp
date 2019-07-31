@@ -865,17 +865,18 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
         };
 
         this.callbacks = {
-
             render: function () {
-                $('head').append(`<link type="text/css" rel="stylesheet" href="${self.params.path}/style.css" >`);
+                var settings = self.get_settings();
+                if ($('link[href="' + settings.path + '/style.css?v=' + settings.version +'"').length < 1) {
+                    $("head").append('<link href="' + settings.path + '/style.css?v=' + settings.version + '" type="text/css" rel="stylesheet">');
+                }
+
                 if (self.system().area == 'lcard') {
                     self.userAccess();
                 }
 
-                if (typeof (AMOCRM.data.current_card) != 'undefined') {
-                    if (AMOCRM.data.current_card.id == 0) {
-                        return false;
-                    }
+                if (!AMOCRM.data.current_card && AMOCRM.data.current_card.id == 0) {
+                    return false;
                 }
 
                 return true;
