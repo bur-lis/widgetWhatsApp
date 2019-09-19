@@ -175,7 +175,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 var contactItemHTML = `
                     <label class="contact prostowapp" for="checkbox${i}">
                         <input class="contact__checkbox" id="checkbox${i}" ${active ? 'checked': ''} type="checkbox">
-                        <span class="contact__name">${name}:</span>
+                        <span title="${name}" class="contact__name">${name}:</span>
                         <select class="contact__select ${ len === 1? 'contact__select--only' : ''}">
                             ${options}
                         </select>
@@ -214,7 +214,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     <div>В случае бана системой What’s App мы не несем ответственности за это.</div>
                 </div>
             </div>
-            <textarea id="wa_message" class="prostowapp" readonly></textarea>`;
+            <textarea id="wa_message" class="prostowapp"></textarea>`;
             btnSend = '<div class="send-message prostowapp"><button class="back prostowapp" id="send-message">ОТПРАВИТЬ СООБЩЕНИЕ</button>' +
                 '<div id="add-file" class="add-file-btn prostowapp"><img src="' + self.params.path + '/images/clip.png" class="clip prostowapp"></div></div>';
             btnHiddenFile = '<input hidden multiple type="file" id="file" class="prostowapp">';
@@ -375,7 +375,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                 var isChecked = $(e.target).prop('checked');
                 if (isChecked) {
                     $('#wa_message.prostowapp').val("");
-                    $('textarea#wa_message.prostowapp').attr('readonly', false);
                     $('textarea#wa_message.prostowapp').focus();
                 }
                 else {
@@ -633,7 +632,7 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
 
         this.deleteBlock = function (idBlock, idParent) {
             var html = 'Вы уверены, что хотите удалить блок?<br><br>' +
-                '<input type="button" value="УДАЛИТЬ" class="back prostowapp" id="del-yes">' +
+                '<input type="button" value="УДАЛИТЬ" class="back prostowapp" id="del-yes">' +'<br>'+
                 '<input type="button" value="ОТМЕНА" class="back prostowapp" id="del-no">';
 
             $('#prostowapp-del-modal').append('<span class="modal-body__close"><span class="icon icon-modal-close"></span></span>');
@@ -736,16 +735,13 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
             var qIcon;
             var i;
             for (i = 0; i < headersArr.length; i++) {
-                if (i != 0 &&
-                    i != headersArr.length - 1 &&
-                    i != headersArr.length - 2) {
 
-                    if (i == 1) {
+                    if (i == 0) {
                         qIcon = '<div>' +
                             '<img src="' + self.params.path + '/images/down.png" ' +
                             'class="queue prostowapp" data-prostowapp-dir="down" id="' + $(headersArr[i]).attr('id') + '">' +
                             '</div>';
-                    } else if (i == headersArr.length - 3) {
+                    } else if (i == headersArr.length - 1) {
                         qIcon = '<div>' +
                             '<img src="' + self.params.path + '/images/up.png" ' +
                             'class="queue prostowapp" data-prostowapp-dir="up" id="' + $(headersArr[i]).attr('id') + '">' +
@@ -760,9 +756,6 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     }
 
                     $(headersArr[i]).prepend(qIcon);
-                } else {
-                    $(headersArr[i]).children().first().css('margin-left', '37px');
-                }
             }
 
             for (i = 0; i < headersArr.length; i++) {
@@ -770,13 +763,8 @@ define(['jquery', 'lib/components/base/modal'], function ($, Modal) {
                     '<img src="' + self.params.path + '/images/edit.png" ' +
                     'class="tool edit-tool prostowapp" id="' +
                     $(headersArr[i]).attr('id') + '">');
-
-                if (i != 0 &&
-                    i != headersArr.length - 1 &&
-                    i != headersArr.length - 2) {
                     $(headersArr[i]).append('<img src="' + self.params.path + '/images/delete.png" ' +
                         'class="tool del-tool prostowapp" id="' + $(headersArr[i]).attr('id') + '">');
-                }
             }
 
             var positionsArr = $('.checkbox-position.prostowapp');

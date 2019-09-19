@@ -3,10 +3,11 @@ const child_process = require('child_process');
 const readline = require('readline');
 const path = require('path');
 
-const overridePath = 'C:/Users/dev/Documents/overrides';
-// const domen = 'pasportprosto'
-const domen = 'mois11'
-const dir = path.join(overridePath, domen + '.amocrm.ru', '/upl/test_lis/widget/');
+const overridePath = 'C:/Users/byrak/development/overrides';
+const domen = 'pasportprosto';
+//const domen = 'mois11'
+const dir = path.join(overridePath, domen + '.amocrm.ru', '/widgets/amo_new_pasportprosto_whatsapp/');
+const version = '1.0.2';
 
 console.log(dir);
 
@@ -45,7 +46,7 @@ if (scriptNames.length === 1) {
 function createLink(filename) {
     console.log(filename);
     
-    const stylesPath = path.normalize(dir + 'style.css');
+    const stylesPath = path.normalize(dir + 'style.css%3fv=' + version);
     if (fs.existsSync(stylesPath)) {
         fs.unlinkSync(stylesPath);
     }
@@ -55,7 +56,7 @@ function createLink(filename) {
     })
 
     const commandScript = `mklink "${path.normalize(dir + filename)}" script.js /H`;
-    const commandStyle = `mklink "${path.normalize(dir + 'style.css')}" style.css /H`;
+    const commandStyle = `mklink "${stylesPath}" style.css /H`;
     child_process.execSync(commandScript);
     child_process.execSync(commandStyle);
     console.log('Success');
